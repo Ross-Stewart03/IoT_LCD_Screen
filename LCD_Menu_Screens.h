@@ -29,16 +29,18 @@
 #define TEXT_TITLE_X  40
 #define TEXT_TITLE_Y  10
 
+// TODO: Need to be able to hav a "pop-up" that lets user know they can't access/change a value until they unlock the device
+
 /*
-  Macro naming convension: [Object]_[Menu screen name]_[Specified name]_[Atribute], e.g. [BUTTON]_[MAIN_MENU]_[TEST_BUTTONS_SCREEN]_[X]
+  Macro naming convension: [Object]_[Menu screen name]_[Specified name]_[Atribute], e.g. [BUTTON]_[MAIN_MENU]_[DATA_SCREEN]_[X]
 */
 
 /*
   Main Menu Screen
 */
 /* Indexes */
-// Buttona
-#define BUTTON_MAIN_MENU_TEST_BUTTONS_SELECT_ARRAY_INDEX      0
+// Buttons
+#define BUTTON_MAIN_MENU_DATA_SELECT_ARRAY_INDEX      0
 #define BUTTON_MAIN_MENU_LIMITS_SETTINGS_SELECT_ARRAY_INDEX   1
 #define BUTTON_MAIN_MENU_ARRAY_NUM                            2
 // Texts
@@ -53,16 +55,16 @@
 
 
 /* LCD_Button */
-// Test Buttons
-#define BUTTON_MAIN_MENU_TEST_BUTTONS_SELECT_X                  100
-#define BUTTON_MAIN_MENU_TEST_BUTTONS_SELECT_Y                  70
-#define BUTTON_MAIN_MENU_TEST_BUTTONS_SELECT_WIDTH              100
-#define BUTTON_MAIN_MENU_TEST_BUTTONS_SELECT_HEIGHT             40
-#define BUTTON_MAIN_MENU_TEST_BUTTONS_SELECT_BACKGROUND_COLOUR  ILI9341_BLUE
-#define BUTTON_MAIN_MENU_TEST_BUTTONS_SELECT_TEXT_COLOUR        ILI9341_WHITE
-#define BUTTON_MAIN_MENU_TEST_BUTTONS_SELECT_BORDER_COLOUR      ILI9341_BLUE
-#define TEXT_MAIN_MENU_TEST_BUTTONS_SELECT_WIDTH_SACLE          1
-#define TEXT_MAIN_MENU_TEST_BUTTONS_SELECT_HEIGHT_SACLE         1
+// Data
+#define BUTTON_MAIN_MENU_DATA_SELECT_X                  100
+#define BUTTON_MAIN_MENU_DATA_SELECT_Y                  70
+#define BUTTON_MAIN_MENU_DATA_SELECT_WIDTH              100
+#define BUTTON_MAIN_MENU_DATA_SELECT_HEIGHT             40
+#define BUTTON_MAIN_MENU_DATA_SELECT_BACKGROUND_COLOUR  ILI9341_BLUE
+#define BUTTON_MAIN_MENU_DATA_SELECT_TEXT_COLOUR        ILI9341_WHITE
+#define BUTTON_MAIN_MENU_DATA_SELECT_BORDER_COLOUR      ILI9341_BLUE
+#define TEXT_MAIN_MENU_DATA_SELECT_WIDTH_SACLE          1
+#define TEXT_MAIN_MENU_DATA_SELECT_HEIGHT_SACLE         1
 // Limits Settings
 #define BUTTON_MAIN_MENU_LIMITS_SETTINGS_SELECT_X                  100
 #define BUTTON_MAIN_MENU_LIMITS_SETTINGS_SELECT_Y                  130
@@ -72,12 +74,12 @@
 #define BUTTON_MAIN_MENU_LIMITS_SETTINGS_SELECT_TEXT_COLOUR        ILI9341_WHITE
 #define BUTTON_MAIN_MENU_LIMITS_SETTINGS_SELECT_BORDER_COLOUR      ILI9341_BLUE
 #define TEXT_MAIN_MENU_LIMITS_SETTINGS_SELECT_WIDTH_SACLE          1
-#define TEXT_MAIN_MENU_LIMITS_SETTINGS_SELECT_HEIGHT_SACLE         1     
+#define TEXT_MAIN_MENU_LIMITS_SETTINGS_SELECT_HEIGHT_SACLE         1
 
 /* LCD_Text */
 // Title
 #define TEXT_MAIN_MENU_TITLE_X                  30
-#define TEXT_MAIN_MENU_TITLE_Y                  0
+#define TEXT_MAIN_MENU_TITLE_Y                  5
 #define TEXT_MAIN_MENU_TITLE_BACKGROUND_COLOUR  ILI9341_BLACK
 #define TEXT_MAIN_MENU_TITLE_TEXT_COLOUR        ILI9341_WHITE
 #define TEXT_MAIN_MENU_TITLE_DEFAULT_INT_VAL    0
@@ -100,35 +102,40 @@
 // LCD_Screen_Data
 #define SCREEN_MAIN_MENU_BACKGROUND_COLOUR    ILI9341_BLACK
 
-// Global Varibles
+// Global Varibles/Structs
 extern LCD_Screen_Data ScreenData_MainMenu;
 
 // Button Handlers
-void ButtonHandler_MainMenu_TestButtonsScreenSelect (void);
+void ButtonHandler_MainMenu_DataScreenSelect (void);
 void ButtonHandler_MainMenu_LimitsSettingScreenSelect (void);
+
+// Update Screen Logic
+void UpdateScreenLogic_MainMenu (void);
+
+// LCD Screen Data
 /*
   Main Menu Screen
 */
 
 
 /*
-  Test Buttons Screen
+  Data Screen
 */
 // Button sizes
-#define BUTTON_TEST_BUTTONS_COUNTER_WIDTH   100
-#define BUTTON_TEST_BUTTONS_COUNTER_HEIGHT  40
-#define BUTTON_TEST_BUTTONS_LED_WIDTH       100
-#define BUTTON_TEST_BUTTONS_LED_HEIGHT      40
+#define BUTTON_DATA_COUNTER_WIDTH   100
+#define BUTTON_DATA_COUNTER_HEIGHT  40
+#define BUTTON_DATA_LED_WIDTH       100
+#define BUTTON_DATA_LED_HEIGHT      40
 
 // Button positions
-#define BUTTON_TEST_BUTTONS_COUNTER_X  70
-#define BUTTON_TEST_BUTTONS_COUNTER_Y  40
-#define BUTTON_TEST_BUTTONS_LED_X      70
-#define BUTTON_TEST_BUTTONS_LED_Y      100
+#define BUTTON_DATA_COUNTER_X  70
+#define BUTTON_DATA_COUNTER_Y  40
+#define BUTTON_DATA_LED_X      70
+#define BUTTON_DATA_LED_Y      100
 
 // Text positions
-#define TEXT_TEST_BUTTONS_COUNTER_X  BUTTON_COUNTER_X + (BUTTON_COUNTER_WIDTH / 2) + SPACING_10_PIXELS
-#define TEXT_TEST_BUTTONS_COUNTER_Y  BUTTON_COUNTER_Y - SPACING_5_PIXELS
+#define TEXT_DATA_COUNTER_X  BUTTON_COUNTER_X + (BUTTON_COUNTER_WIDTH / 2) + SPACING_10_PIXELS
+#define TEXT_DATA_COUNTER_Y  BUTTON_COUNTER_Y - SPACING_5_PIXELS
 
 // LED
 #define LED_RADIUS            20
@@ -138,21 +145,21 @@ void ButtonHandler_MainMenu_LimitsSettingScreenSelect (void);
 extern uint16_t LCDLEDColoursArr[LCD_LED_COLOURS_NUM];
 
 // Button indexes
-#define BUTTONS_TEST_BUTTONS_ARRAY_INDEX_COUNTER  0
-#define BUTTONS_TEST_BUTTONS_ARRAY_INDEX_LED      1
-#define BUTTONS_TEST_BUTTONS_ARRAY_INDEX_BACK     2
-#define BUTTONS_TEST_BUTTONS_ARRAY_NUM            3
+#define BUTTONS_DATA_ARRAY_INDEX_COUNTER  0
+#define BUTTONS_DATA_ARRAY_INDEX_LED      1
+#define BUTTONS_DATA_ARRAY_INDEX_BACK     2
+#define BUTTONS_DATA_ARRAY_NUM            3
 
 // Text indexes
-#define TEXT_TEST_BUTTONS_ARRAY_INDEX_TITLE     0
-#define TEXT_TEST_BUTTONS_ARRAY_NUM             1
+#define TEXT_DATA_ARRAY_INDEX_TITLE 0
+#define TEXT_DATA_ARRAY_NUM         1
 
 // Global Variables
-extern LCD_Screen_Data ScreenData_TestButtons;
+extern LCD_Screen_Data ScreenData_Data;
 extern uint8_t LEDState;
 extern uint8_t Counter;
 /*
-  Test Buttons Screen
+  Data Screen
 */
 
 

@@ -10,41 +10,44 @@ Adafruit_FT6206 ts ;
 // Init Global Variables/Structs
 // General
 LCD_Button        *CurrentButtonsArr[MAX_NUM_BUTTONS] = {nullptr};
-LCD_Screen_Data*  LCDScreenData_Current;
+LCD_Screen_Data   *LCDScreenData_Current;
 X_Y_Position      LCD_Touch_Position;
 LCD_Menu          Previous_Menu_Screen;
 LCD_Menu          Current_Menu_Screen;
-uint32_t  PreviousTime  = 0;
+uint32_t  PreviousGraphicsTime  = 0;
+uint32_t  PreviousLogicTime  = 0;
 uint32_t  CurrentTime   = 0;
-// Main Menu
-LCD_Screen_Data ScreenData_MainMenu;
-// Test Buttons
-LCD_Screen_Data ScreenData_TestButtons;
 uint8_t LEDState  = 0;
 uint8_t Counter   = 0;
 // Limits Settings
-LCD_Screen_Data ScreenData_LimitsSettings;
 uint8_t CounterLimit = INIT_VALUE_SETTINGS_BUTTONS_COUNTER_LIMIT;
 // Keypad
-LCD_Screen_Data ScreenData_Keypad;
 uint16_t UserNumber = 0;
-
 
 
 void setup() {
   // Inits for the system
+  Serial.begin(9600);
+  delay(1000);
+  Serial.println("SerialStart");
   Adafruit_Screen_Init();
   Menu_Init();
   Buttons_Init();
+  Config_New_Menu_Screen(&ScreenData_MainMenu);
+  Update_Screen_Graphics();
 }
 
 void loop() {
   CurrentTime = millis();
 
+  Update_Menu_Change_Config();
+
+  Update_Screen_Logic();
+
   Touch_Position_Update_Buttons();
 
-  if (CurrentTime - PreviousTime >= GRAPHICS_UPDATE_INTERVAL) {
-    PreviousTime = CurrentTime;
+  if (CurrentTime - PreviousGraphicsTime >= GRAPHICS_UPDATE_INTERVAL) {
+    PreviousGraphicsTime = CurrentTime;
     Update_Screen_Graphics();
   }
 }
