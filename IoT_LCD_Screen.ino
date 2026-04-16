@@ -3,6 +3,7 @@
 #include "LCD_Menu_Screens.h"
 #include "LCD_Main.h"
 
+
 // create display and touchscreen objects
 Adafruit_ILI9341 tft(ARDUINO_PIN_TFT_CS, ARDUINO_PIN_TFT_DC);
 Adafruit_FT6206 ts ;
@@ -24,8 +25,12 @@ uint8_t CounterLimit = INIT_VALUE_SETTINGS_BUTTONS_COUNTER_LIMIT;
 // Keypad
 uint16_t UserNumber = 0;
 
+uint16_t POTValue = 0;
 
 void setup() {
+
+  pinMode(ARDUINO_PIN_POT, INPUT);
+
   // Inits for the system
   Serial.begin(9600);
   delay(1000);
@@ -48,6 +53,18 @@ void loop() {
 
   if (CurrentTime - PreviousGraphicsTime >= GRAPHICS_UPDATE_INTERVAL) {
     PreviousGraphicsTime = CurrentTime;
+
     Update_Screen_Graphics();
   }
+  
+  POTValue = map(analogRead(ARDUINO_PIN_POT), 0, 1023, 0, 100);
+  Serial.print("Pot Value: ");
+  Serial.println(POTValue);
+  tft.setTextColor(ILI9341_WHITE, ILI9341_BLACK);
+  tft.setTextSize(1);
+  tft.setCursor(100, 200);
+  tft.print("Pot Value: ");
+  tft.print(POTValue);
+  
+  delay(100);
 }

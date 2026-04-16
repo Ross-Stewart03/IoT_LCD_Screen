@@ -9,6 +9,8 @@
 #include <Wire.h>
 #include <SPI.h>
 
+// POT pin
+#define ARDUINO_PIN_POT     'A1'
 // LCD touch screen pins
 #define ARDUINO_PIN_TFT_DC  6
 #define ARDUINO_PIN_TFT_CS  7
@@ -89,7 +91,7 @@ typedef struct LCD_Button {
 // Data about the text
 typedef struct LCD_Text {
   const char        *Text; // Adafuit limits this based on text width visually in pixels
-  float             FloatVar;
+  int               FloatVar; // x10 so it can be stored as int, connection issue when data type is float
   X_Y_Position      Position;
   uint16_t          BackgroundColour;
   uint16_t          TextColour;
@@ -126,7 +128,7 @@ extern Adafruit_ILI9341 tft;
 extern Adafruit_FT6206  ts;
 
 // Functions
-void LCD_Print_Float(const char *Text, uint16_t x, uint16_t y, float FloatVar, uint16_t BackgroundColour, uint16_t TextColour, uint8_t TextSize);
+void LCD_Print_Float(const char *Text, uint16_t x, uint16_t y, int FloatVar, uint16_t BackgroundColour, uint16_t TextColour, uint8_t TextSize);
 void LCD_Print_Int(const char *Text, uint16_t x, uint16_t y, uint16_t IntVar, uint16_t BackgroundColour, uint16_t TextColour, uint8_t TextSize);
 void LCD_Print_Text(const char *Text, uint16_t x, uint16_t y, uint16_t BackgroundColour, uint16_t TextColour, uint8_t TextSize);
 void Config_New_Menu_Screen (LCD_Screen_Data *Screen);

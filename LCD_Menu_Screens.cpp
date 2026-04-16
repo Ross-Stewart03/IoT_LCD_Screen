@@ -58,7 +58,6 @@ LCD_Button ButtonsArr_MainMenuScreen[BUTTONS_DATA_ARRAY_NUM] = {
 };
 
 // Texts
-static const float TEXT_MAIN_MENU_TITLE_DEFAULT_FLOAT_VAL = 0.0f;
 LCD_Text TextArr_MainMenuScreen[TEXT_DATA_ARRAY_NUM] = {
   { // Title
     "Main Menu",

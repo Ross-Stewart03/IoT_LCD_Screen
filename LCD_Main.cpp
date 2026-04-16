@@ -45,6 +45,7 @@ void Adafruit_Screen_Init(void) {
   tft.setRotation(1);
   Print_Diagnostics();
   tft.fillScreen(ILI9341_BLACK);
+  Serial.println("Test");
 }
 
 // Prints text to the LCD screen
@@ -67,12 +68,12 @@ void LCD_Print_Int(const char *Text, uint16_t x, uint16_t y, uint16_t IntVar, ui
 }
 
 // Prints text to the LCD screen with a float variable
-void LCD_Print_Float(const char *Text, uint16_t x, uint16_t y, float FloatVar, uint16_t BackgroundColour, uint16_t TextColour, uint8_t TextSize) {
+void LCD_Print_Float(const char *Text, uint16_t x, uint16_t y, int FloatVar, uint16_t BackgroundColour, uint16_t TextColour, uint8_t TextSize) {
   tft.setTextColor(TextColour, BackgroundColour);
   tft.setTextSize(TextSize);
   tft.setCursor(x, y);
   tft.print(Text);
-  tft.print(FloatVar);
+  tft.print(FloatVar/10);
 }
 
 // Gets the coordinates of where the user touched the screen(If screen was touched)
@@ -156,7 +157,7 @@ void Update_Screen_Logic(void) {
 // Updates all graphic on the screen(Text and shapes)
 void Update_Screen_Graphics(void) {
 // Which ever object is draw last will be on top.
-  uint i = 0;
+  uint8_t i = 0;
  
   // Draws all rectangles on the screen
   if (LCDScreenData_Current->RectanglesArr != nullptr) {
@@ -178,14 +179,26 @@ void Update_Screen_Graphics(void) {
 
   // Updates all text on the screen
   for (i = 0; i < LCDScreenData_Current->TextsNum; i++) {
+    Serial.println(LCDScreenData_Current->TextArr[i].VarType);
+    Serial.println(LCDScreenData_Current->TextArr[i].Text);
+    Serial.println(LCDScreenData_Current->TextArr[i].Position.x);
+    Serial.println(LCDScreenData_Current->TextArr[i].Position.y);
+    Serial.println(LCDScreenData_Current->TextArr[i].BackgroundColour);
+    Serial.println(LCDScreenData_Current->TextArr[i].TextColour);
+    Serial.println(LCDScreenData_Current->TextArr[i].FontSize);
+
+    Serial.println(LCDScreenData_Current->TextArr[i].FloatVar);
+
     switch (LCDScreenData_Current->TextArr[i].VarType) {
       case LCD_TEXT_VAR_TYPE_INT:
+        
         LCD_Print_Int(LCDScreenData_Current->TextArr[i].Text,
                       LCDScreenData_Current->TextArr[i].Position.x, LCDScreenData_Current->TextArr[i].Position.y,
                       LCDScreenData_Current->TextArr[i].IntVar,
                       LCDScreenData_Current->TextArr[i].BackgroundColour,
                       LCDScreenData_Current->TextArr[i].TextColour,
                       LCDScreenData_Current->TextArr[i].FontSize);
+        
         break;
 
       case LCD_TEXT_VAR_TYPE_FLOAT:
@@ -198,14 +211,30 @@ void Update_Screen_Graphics(void) {
         break;
 
       default: // LCD_TEXT_VAR_TYPE_NON
+        Serial.print("Text: ");
+        Serial.println(LCDScreenData_Current->TextArr[i].Text);
+        Serial.print("Pos x: ");
+        Serial.println(LCDScreenData_Current->TextArr[i].Position.x);
+        Serial.print("Pos y: ");
+        Serial.println(LCDScreenData_Current->TextArr[i].Position.y);
+        Serial.print("Background Colour: ");
+        Serial.println(LCDScreenData_Current->TextArr[i].BackgroundColour);
+        Serial.print("TextColour: ");
+        Serial.println(LCDScreenData_Current->TextArr[i].TextColour);
+        Serial.print("FontSize: ");
+        Serial.println(LCDScreenData_Current->TextArr[i].FontSize);
+        
         LCD_Print_Text(LCDScreenData_Current->TextArr[i].Text,
                        LCDScreenData_Current->TextArr[i].Position.x, LCDScreenData_Current->TextArr[i].Position.y,
                        LCDScreenData_Current->TextArr[i].BackgroundColour,
                        LCDScreenData_Current->TextArr[i].TextColour,
                        LCDScreenData_Current->TextArr[i].FontSize);
+        
         break;
     }
   }
+  
+  
   /*
   UPDATE ON SCREEN TEXT, BUTTONS AND OBJECTS HERE
 

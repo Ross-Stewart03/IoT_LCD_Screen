@@ -40,7 +40,7 @@
 */
 /* Indexes */
 // Buttons
-#define BUTTON_MAIN_MENU_DATA_SELECT_ARRAY_INDEX      0
+#define BUTTON_MAIN_MENU_DATA_SELECT_ARRAY_INDEX              0
 #define BUTTON_MAIN_MENU_LIMITS_SETTINGS_SELECT_ARRAY_INDEX   1
 #define BUTTON_MAIN_MENU_ARRAY_NUM                            2
 // Texts
@@ -78,6 +78,7 @@
 
 /* LCD_Text */
 // Title
+#define TEXT_MAIN_MENU_TITLE_DEFAULT_FLOAT_VAL  0 // Stored value is x10 of actual
 #define TEXT_MAIN_MENU_TITLE_X                  30
 #define TEXT_MAIN_MENU_TITLE_Y                  5
 #define TEXT_MAIN_MENU_TITLE_BACKGROUND_COLOUR  ILI9341_BLACK
