@@ -19,25 +19,40 @@
 #define SPACING_15_PIXELS  15
 #define SPACING_20_PIXELS  20
 
-// Back Button sizing and positioning
-#define BUTTON_BACK_WIDTH   50
-#define BUTTON_BACK_HEIGHT  20
-#define BUTTON_BACK_X       20
-#define BUTTON_BACK_Y       10
+/*
+ *
+ Back Button
+ *
+*/
+/* LCD_Button */
+#define BUTTON_BACK_X                  30
+#define BUTTON_BACK_Y                  12
+#define BUTTON_BACK_WIDTH              60
+#define BUTTON_BACK_HEIGHT             24
+#define BUTTON_BACK_BACKGROUND_COLOUR  ILI9341_BLUE
+#define BUTTON_BACK_TEXT_COLOUR        ILI9341_WHITE
+#define BUTTON_BACK_BORDER_COLOUR      ILI9341_BLUE
+#define BUTTON_BACK_WIDTH_SACLE        1
+#define BUTTON_BACK_HEIGHT_SACLE       1
 
-// Tile Text positioning
-#define TEXT_TITLE_X  40
-#define TEXT_TITLE_Y  10
+// Button Handlers
+void ButtonHandler_Back_Button (void);
+/*
+ *
+ Back Button
+ *
+ */
 
 // TODO: Need to be able to hav a "pop-up" that lets user know they can't access/change a value until they unlock the device
 
-/*
-  Macro naming convension: [Object]_[Menu screen name]_[Specified name]_[Atribute], e.g. [BUTTON]_[MAIN_MENU]_[DATA_SCREEN]_[X]
-*/
+
+//  Macro naming convension: [Object]_[Menu screen name]_[Specified name]_[Atribute], e.g. [BUTTON]_[MAIN_MENU]_[DATA_SCREEN]_[X]
 
 /*
-  Main Menu Screen
-*/
+ *
+ Main Menu Screen
+ *
+ */
 /* Indexes */
 // Buttons
 #define BUTTON_MAIN_MENU_DATA_SELECT_ARRAY_INDEX              0
@@ -47,12 +62,15 @@
 #define TEXT_MAIN_MENU_TITLE_SELECT_ARRAY_INDEX   0
 #define TEXT_MAIN_MENU_ARRAY_NUM                  1 
 // Rectangles
-//#define RECTANGLE_MAIN_MENU_[Specified name here]_SELECT_ARRAY_INDEX   [Value here]
+//#define RECTANGLE_MAIN_MENU_[Specified name here]_ARRAY_INDEX   [Value here]
 #define RECTANGLE_MAIN_MENU_ARRAY_NUM  0
+//#define RECTANGLE_MAIN_MENU_[Specified name here]_[Colour 1]    [Value here]
+//#define RECTANGLE_MAIN_MENU_[Specified name here]_INDEX         [Value here]
 // Circles
-//#define CIRCLE_MAIN_MENU_[Specified name here]_SELECT_ARRAY_INDEX   [Value here]
+//#define CIRCLE_MAIN_MENU_[Specified name here]_ARRAY_INDEX  [Value here]
 #define CIRCLE_MAIN_MENU_ARRAY_NUM  0
-
+//#define CIRLCE_MAIN_MENU_[Specified name here]_[Colour 1]   [Value here]
+//#define CIRCLE_MAIN_MENU_[Specified name here]_INDEX        [Value here]
 
 /* LCD_Button */
 // Data
@@ -63,8 +81,8 @@
 #define BUTTON_MAIN_MENU_DATA_SELECT_BACKGROUND_COLOUR  ILI9341_BLUE
 #define BUTTON_MAIN_MENU_DATA_SELECT_TEXT_COLOUR        ILI9341_WHITE
 #define BUTTON_MAIN_MENU_DATA_SELECT_BORDER_COLOUR      ILI9341_BLUE
-#define TEXT_MAIN_MENU_DATA_SELECT_WIDTH_SACLE          1
-#define TEXT_MAIN_MENU_DATA_SELECT_HEIGHT_SACLE         1
+#define TEXT_MAIN_MENU_DATA_SELECT_WIDTH_SACLE          2
+#define TEXT_MAIN_MENU_DATA_SELECT_HEIGHT_SACLE         2
 // Limits Settings
 #define BUTTON_MAIN_MENU_LIMITS_SETTINGS_SELECT_X                  100
 #define BUTTON_MAIN_MENU_LIMITS_SETTINGS_SELECT_Y                  130
@@ -73,8 +91,8 @@
 #define BUTTON_MAIN_MENU_LIMITS_SETTINGS_SELECT_BACKGROUND_COLOUR  ILI9341_BLUE
 #define BUTTON_MAIN_MENU_LIMITS_SETTINGS_SELECT_TEXT_COLOUR        ILI9341_WHITE
 #define BUTTON_MAIN_MENU_LIMITS_SETTINGS_SELECT_BORDER_COLOUR      ILI9341_BLUE
-#define TEXT_MAIN_MENU_LIMITS_SETTINGS_SELECT_WIDTH_SACLE          1
-#define TEXT_MAIN_MENU_LIMITS_SETTINGS_SELECT_HEIGHT_SACLE         1
+#define TEXT_MAIN_MENU_LIMITS_SETTINGS_SELECT_WIDTH_SACLE          2
+#define TEXT_MAIN_MENU_LIMITS_SETTINGS_SELECT_HEIGHT_SACLE         2
 
 /* LCD_Text */
 // Title
@@ -97,8 +115,7 @@
 // Circle 1
 //#define CIRCLE_MAIN_MENU_[Circle name here]_X       [Value here]
 //#define CIRCLE_MAIN_MENU_[Circle name here]_Y       [Value here]
-//#define CIRCLE_MAIN_MENU_[Circle name here]_WIDTH   [Value here]
-//#define CIRCLE_MAIN_MENU_[Circle name here]_HEIGHT  [Value here]
+//#define CIRCLE_MAIN_MENU_[Circle name here]_RADIUS  [Value here]
 
 // LCD_Screen_Data
 #define SCREEN_MAIN_MENU_BACKGROUND_COLOUR    ILI9341_BLACK
@@ -108,65 +125,119 @@ extern LCD_Screen_Data ScreenData_MainMenu;
 
 // Button Handlers
 void ButtonHandler_MainMenu_DataScreenSelect (void);
-void ButtonHandler_MainMenu_LimitsSettingScreenSelect (void);
+void ButtonHandler_MainMenu_LimitsSettingsScreenSelect (void);
 
 // Update Screen Logic
-void UpdateScreenLogic_MainMenu (void);
-
-// LCD Screen Data
+//void UpdateScreenLogic_MainMenu (void);
 /*
-  Main Menu Screen
-*/
+ *
+ Main Menu Screen
+ *
+ */
 
 
 /*
-  Data Screen
-*/
-// Button sizes
-#define BUTTON_DATA_COUNTER_WIDTH   100
-#define BUTTON_DATA_COUNTER_HEIGHT  40
-#define BUTTON_DATA_LED_WIDTH       100
-#define BUTTON_DATA_LED_HEIGHT      40
+ *
+ Data Screen
+ *
+ */
+/* Indexes */
+// Buttons
+#define BUTTON_DATA_BACK_BUTTON_ARRAY_INDEX   0
+#define BUTTON_DATA_ARRAY_NUM                 1
+// Texts
+#define TEXT_DATA_TITLE_ARRAY_INDEX   0
+#define TEXT_DATA_ARRAY_NUM           1 
+// Rectangles
+//#define RECTANGLE_DATA_[Specified name here]_ARRAY_INDEX      [Value here]
+#define RECTANGLE_DATA_ARRAY_NUM  0
+//#define RECTANGLE_DATA_MENU_[Specified name here]_ARRAY_[Colour 1]  [Value here]
+//#define RECTANGLE_DATA_MENU_[Specified name here]_ARRAY_NUM       [Value here]
+// Circles
+#define CIRCLE_DATA_HEATER_ARRAY_INDEX  0
+#define CIRCLE_DATA_ARRAY_NUM           1
+#define CIRCLE_DATA_HEATER_ARRAY_RED_INDEX    0
+#define CIRCLE_DATA_HEATER_ARRAY_GREEN_INDEX  1
+#define CIRCLE_DATA_HEADER_ARRAY_NUM          2
 
-// Button positions
-#define BUTTON_DATA_COUNTER_X  70
-#define BUTTON_DATA_COUNTER_Y  40
-#define BUTTON_DATA_LED_X      70
-#define BUTTON_DATA_LED_Y      100
+/* LCD_Button */
+// [Button Name]
+/*#define BUTTON__DATA_[Button Name]_X                100
+#define BUTTON_DATA_[Button Name]_Y                   70
+#define BUTTON_DATA_[BUTTON Name]_WIDTH               100
+#define BUTTON_DATA_[BUTTON Name]_HEIGHT              40
+#define BUTTON_DATA_[BUTTON Name]_BACKGROUND_COLOUR   ILI9341_BLUE
+#define BUTTON_DATA_[BUTTON Name]_TEXT_COLOUR         ILI9341_WHITE
+#define BUTTON_DATA_[BUTTON Name]_BORDER_COLOUR       ILI9341_BLUE
+#define BUTTON_DATA_[BUTTON Name]_WIDTH_SACLE         2
+#define BUTTON_DATA_[BUTTON Name]_HEIGHT_SACLE        2 */
 
-// Text positions
-#define TEXT_DATA_COUNTER_X  BUTTON_COUNTER_X + (BUTTON_COUNTER_WIDTH / 2) + SPACING_10_PIXELS
-#define TEXT_DATA_COUNTER_Y  BUTTON_COUNTER_Y - SPACING_5_PIXELS
+/* LCD_Text */
+// Title
+#define TEXT_DATA_TITLE_DEFAULT_FLOAT_VAL   0 // Stored value is x10 of actual
+#define TEXT_DATA_TITLE_X                   BUTTON_BACK_X + BUTTON_BACK_WIDTH + SPACING_15_PIXELS
+#define TEXT_DATA_TITLE_Y                   5
+#define TEXT_DATA_TITLE_BACKGROUND_COLOUR   ILI9341_BLACK
+#define TEXT_DATA_TITLE_TEXT_COLOUR         ILI9341_WHITE
+#define TEXT_DATA_TITLE_DEFAULT_INT_VAL     0
+#define TEXT_DATA_TITLE_FONT_SIZE           3
+// Heater
+#define TEXT_DATA_HEATER_DEFAULT_FLOAT_VAL  0 // Stored value is x10 of actual
+#define TEXT_DATA_HEATER_X                  100
+#define TEXT_DATA_HEATER_Y                  70
+#define TEXT_DATA_HEATER_BACKGROUND_COLOUR  ILI9341_BLACK
+#define TEXT_DATA_HEATER_TEXT_COLOUR        ILI9341_WHITE
+#define TEXT_DATA_HEATER_DEFAULT_INT_VAL    0
+#define TEXT_DATA_HEATER_FONT_SIZE          2
+// Humidity
+#define TEXT_DATA_HEATER_DEFAULT_FLOAT_VAL    0 // Stored value is x10 of actual
+#define TEXT_DATA_HUMIDITY_X                  100
+#define TEXT_DATA_HUMIDITY_Y                  100
+#define TEXT_DATA_HUMIDITY_BACKGROUND_COLOUR  ILI9341_BLACK
+#define TEXT_DATA_HUMIDITY_TEXT_COLOUR        ILI9341_WHITE
+#define TEXT_DATA_HUMIDITY_DEFAULT_INT_VAL    0
+#define TEXT_DATA_HUMIDITY_FONT_SIZE          2
 
-// LED
-#define LED_RADIUS            20
-#define LED_X                 250
-#define LED_Y                 120
-#define LCD_LED_COLOURS_NUM   2
-extern uint16_t LCDLEDColoursArr[LCD_LED_COLOURS_NUM];
+/* LCD_Rectangle */
+// Rectangle 1
+//#define RECTANGLE_MAIN_MENU_[Rectangle name here]_X       [Value here]
+//#define RECTANGLE_MAIN_MENU_[Rectangle name here]_Y       [Value here]
+//#define RECTANGLE_MAIN_MENU_[Rectangle name here]_WIDTH   [Value here]
+//#define RECTANGLE_MAIN_MENU_[Rectangle name here]_HEIGHT  [Value here]
 
-// Button indexes
-#define BUTTONS_DATA_ARRAY_INDEX_COUNTER  0
-#define BUTTONS_DATA_ARRAY_INDEX_LED      1
-#define BUTTONS_DATA_ARRAY_INDEX_BACK     2
-#define BUTTONS_DATA_ARRAY_NUM            3
+/* LCD_Circle */
+// Heater
+#define CIRCLE_DATA_HEATER_ON_OFF_LED_X       200
+#define CIRCLE_DATA_HEATER_ON_OFF_LED_Y       150
+#define CIRCLE_DATA_HEATER_ON_OFF_LED_RADIUS  20
 
-// Text indexes
-#define TEXT_DATA_ARRAY_INDEX_TITLE 0
-#define TEXT_DATA_ARRAY_NUM         1
+// LCD_Screen_Data
+#define SCREEN_DATA_BACKGROUND_COLOUR    ILI9341_BLACK
 
 // Global Variables
 extern LCD_Screen_Data ScreenData_Data;
-extern uint8_t LEDState;
-extern uint8_t Counter;
+extern uint8_t HeaterState;
+extern uint8_t Temperature;
+extern uint8_t Humidity;
+
+// Button Handlers
+//void ButtonHandler_Data_[Button Handler Name] (void);
+
+// Update Screen Logic
+void UpdateScreenLogic_MainMenu (void);
 /*
-  Data Screen
-*/
+ *
+ Data Screen
+ *
+ */
 
 
 /*
-  Limits Setting Screen
-*/
+ *
+ Limits Settings Screen
+ *
+ */
+// TODO: User needs to be asked for a password before they are able to enter this menu
 // Button sizes
 #define BUTTON_LIMITS_SETTINGS_INCREMENT_WIDTH  40
 #define BUTTON_LIMITS_SETTINGS_INCREMENT_HEIGHT 40
@@ -203,15 +274,17 @@ extern uint8_t Counter;
 // Global Variables
 extern LCD_Screen_Data ScreenData_LimitsSettings;
 extern uint8_t CounterLimit;
+/*
+ *
+ Limits Settings Screen
+ *
+ */
 
 /*
-  Limits Settings Screen
-*/
-
-
-/*
-  Keypad Screen
-*/
+ *
+ Keypad Screen
+ *
+ */
 // Button sizes
 #define BUTTON_KEYPAD_NUMBERS_WIDTH   60
 #define BUTTON_KEYPAD_NUMBERS_HEIGHT  60
@@ -261,8 +334,10 @@ extern uint8_t CounterLimit;
 // Global variables
 extern LCD_Screen_Data ScreenData_Keypad;
 extern uint16_t UserNumber;
-/*     
-  Keypad Screen
-*/
+/*
+ *
+ Keypad Screen
+ *
+ */
 
 #endif // LCD_MENU_SCREENS_H_

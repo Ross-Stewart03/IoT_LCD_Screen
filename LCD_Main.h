@@ -9,8 +9,9 @@
 #include <Wire.h>
 #include <SPI.h>
 
-// POT pin
-#define ARDUINO_PIN_POT     'A1'
+// POT pins
+#define ARDUINO_PIN_POT_TEMPERATURE A1
+#define ARDUINO_PIN_POT_HUMIDITY    A2  
 // LCD touch screen pins
 #define ARDUINO_PIN_TFT_DC  6
 #define ARDUINO_PIN_TFT_CS  7
@@ -44,9 +45,10 @@ typedef enum LCD_Text_Var_Type {
 // Menu enum defines
 typedef enum LCD_Menu {
   ENUM_MENU_MAIN_MENU_SCREEN        = 0,
-  ENUM_MENU_DATA_SCREEN     = 1,
+  ENUM_MENU_DATA_SCREEN             = 1,
   ENUM_MENU_LIMITS_SETTINGS_SCREEN  = 2,
-  ENUM_MENU_KEYPAD_SCREEN           = 3
+  ENUM_MENU_UNLOCK_LOCK_SCREEN      = 3,
+  ENUM_MENU_KEYPAD_SCREEN           = 4
 }LCD_Menu;
 
 typedef struct X_Y_Position {
@@ -69,7 +71,7 @@ typedef struct LCD_Rectangle {
 typedef struct LCD_Circle {
   uint16_t      *Colours;
   X_Y_Position  Position;
-  uint16_t      Radius;
+  uint8_t       Radius;
   uint8_t       CurrentColourIndex;
 }LCD_Circle;
 
@@ -112,7 +114,7 @@ typedef struct LCD_Screen_Data {
   uint8_t       TextsNum;
   uint8_t       RectanglesNum;
   uint8_t       CirclesNum;
-  LCD_Menu      LCDScreenMenuEnum;
+  LCD_Menu      LCDScreenMenuEnum; // Value can be printed for debugging
 }LCD_Screen_Data;
 
 // Global varibles/structs
@@ -123,6 +125,7 @@ extern LCD_Menu         Previous_Menu_Screen;
 extern LCD_Menu         Current_Menu_Screen;
 extern uint32_t         PreviousGraphicsTime;
 extern uint32_t         PreviousLogicTime;
+extern uint8_t          ChangeMenuFlag;
 extern uint32_t         CurrentTime;
 extern Adafruit_ILI9341 tft;
 extern Adafruit_FT6206  ts;

@@ -5,7 +5,7 @@
 // Initalises all the buttons from all screens
 void Buttons_Init(void) {
   Screen_Buttons_Init(&ScreenData_MainMenu);
-  //Screen_Buttons_Init(&ScreenData_Data);
+  Screen_Buttons_Init(&ScreenData_Data);
   //Screen_Buttons_Init(&ScreenData_Keypad);
 }
 
@@ -27,15 +27,9 @@ void Screen_Buttons_Init(LCD_Screen_Data *Screen) {
 void Menu_Init(void) {
   Previous_Menu_Screen  = ENUM_MENU_MAIN_MENU_SCREEN;
   Current_Menu_Screen   = ENUM_MENU_MAIN_MENU_SCREEN;
-  LCDScreenData_Current = &ScreenData_MainMenu; 
+  LCDScreenData_Current = &ScreenData_MainMenu;
 
-  /*
-  // TODO:
-
-  Set currrent LCD screen data.butonsArr to Main menu ones
-
-  anything else need init for menu stuff?
-  */
+  // TODO: Set currrent LCD screen data.butonsArr to Main menu ones, anything else need init for menu stuff?
 }
 
 void Adafruit_Screen_Init(void) {  
@@ -45,7 +39,6 @@ void Adafruit_Screen_Init(void) {
   tft.setRotation(1);
   Print_Diagnostics();
   tft.fillScreen(ILI9341_BLACK);
-  Serial.println("Test");
 }
 
 // Prints text to the LCD screen
@@ -104,45 +97,60 @@ void Touch_Position_Update_Buttons(void) {
 void Config_New_Menu_Screen(LCD_Screen_Data *Screen) {
   LCDScreenData_Current = Screen;
 
-  // TODO: Draw "invisible" buttons here, allows user to click on a value to then enter value by keypad
+  // TODO: Make "invisible" buttons(not here, don't need to be drawn), allows user to click on a value to then enter value by keypad(Going to be used for limits, means I don't need extra button showing)
+  // Put "Visiable" back in, allows means I don't even need to draw the button, just check for co-ordinates 
 
   tft.fillScreen(Screen->BackgroundColour); // Blanks everything from previous screen
 
   Update_Screen_Graphics();
-
+  
+  /*
+  Serial.println("*************************");
+  Serial.print("Number of Buttons: ");
+  Serial.println(Screen->ButtonsNum);
+  Serial.println("--------------------");
+  */
   // Draws all buttons on new screen
   for (uint8_t i = 0; i < Screen->ButtonsNum; i++) {
+    /*
+    Serial.print("Drawing button: ");
+    Serial.println(Screen->ButtonsArr[i].Text);
+    */
+    // TODO: Put if statement to check if they are visible
     Screen->ButtonsArr[i].gfx.drawButton(false);
   }
 }
 
 // Configures the Menu system when changing between menus
 void Update_Menu_Change_Config(void) {
-  if (Current_Menu_Screen != Previous_Menu_Screen) {
-    switch(Current_Menu_Screen) {
-      case ENUM_MENU_MAIN_MENU_SCREEN:
-        Config_New_Menu_Screen(&ScreenData_MainMenu);
-        break;
-      /*
-      case ENUM_MENU_DATA_SCREEN:
-        Config_New_Menu_Screen(&ScreenData_Data);
-        break;
+  switch(Current_Menu_Screen) {
+    // Main Menu sceen
+    case ENUM_MENU_MAIN_MENU_SCREEN:
+      Config_New_Menu_Screen(&ScreenData_MainMenu);
+      break;
 
-      case ENUM_MENU_LIMITS_SETTINGS_SCREEN:
-        Config_New_Menu_Screen(&ScreenData_LimitsSettings);
-        break;
+    // Data screen
+    case ENUM_MENU_DATA_SCREEN:
+      Config_New_Menu_Screen(&ScreenData_Data);
+      break;
+    /*
+    // Limits Settings screen
+    case ENUM_MENU_LIMITS_SETTINGS_SCREEN:
+      Config_New_Menu_Screen(&ScreenData_LimitsSettings);
+      break;
 
-      case ENUM_MENU_KEYPAD_SCREEN:
-        Config_New_Menu_Screen(&ScreenData_Keypad);
-        break;*/
+    // Keypad screen
+    case ENUM_MENU_KEYPAD_SCREEN:
+      Config_New_Menu_Screen(&ScreenData_Keypad);
+      break;*/
 
-      default: // Error, set to known state(Main Menu)
-        Serial.print("Menu System error, enum = ");
-        Serial.println(Current_Menu_Screen);
-        Current_Menu_Screen = ENUM_MENU_MAIN_MENU_SCREEN;
-        Previous_Menu_Screen = ENUM_MENU_MAIN_MENU_SCREEN;
-        break;
-    }
+    // Error, set to known state(Main Menu)
+    default:
+      Serial.print("Menu System error, enum = ");
+      Serial.println(Current_Menu_Screen);
+      Current_Menu_Screen = ENUM_MENU_MAIN_MENU_SCREEN;
+      Previous_Menu_Screen = ENUM_MENU_MAIN_MENU_SCREEN;
+      break;
   }
 }
 
@@ -178,62 +186,38 @@ void Update_Screen_Graphics(void) {
   }
 
   // Updates all text on the screen
-  for (i = 0; i < LCDScreenData_Current->TextsNum; i++) {
-    Serial.println(LCDScreenData_Current->TextArr[i].VarType);
-    Serial.println(LCDScreenData_Current->TextArr[i].Text);
-    Serial.println(LCDScreenData_Current->TextArr[i].Position.x);
-    Serial.println(LCDScreenData_Current->TextArr[i].Position.y);
-    Serial.println(LCDScreenData_Current->TextArr[i].BackgroundColour);
-    Serial.println(LCDScreenData_Current->TextArr[i].TextColour);
-    Serial.println(LCDScreenData_Current->TextArr[i].FontSize);
-
-    Serial.println(LCDScreenData_Current->TextArr[i].FloatVar);
-
-    switch (LCDScreenData_Current->TextArr[i].VarType) {
-      case LCD_TEXT_VAR_TYPE_INT:
-        
-        LCD_Print_Int(LCDScreenData_Current->TextArr[i].Text,
-                      LCDScreenData_Current->TextArr[i].Position.x, LCDScreenData_Current->TextArr[i].Position.y,
-                      LCDScreenData_Current->TextArr[i].IntVar,
-                      LCDScreenData_Current->TextArr[i].BackgroundColour,
-                      LCDScreenData_Current->TextArr[i].TextColour,
-                      LCDScreenData_Current->TextArr[i].FontSize);
-        
-        break;
-
-      case LCD_TEXT_VAR_TYPE_FLOAT:
-        LCD_Print_Float(LCDScreenData_Current->TextArr[i].Text,
+  if (LCDScreenData_Current->TextArr != nullptr) {
+    for (i = 0; i < LCDScreenData_Current->TextsNum; i++) {
+      switch (LCDScreenData_Current->TextArr[i].VarType) {
+        case LCD_TEXT_VAR_TYPE_INT:
+          
+          LCD_Print_Int(LCDScreenData_Current->TextArr[i].Text,
                         LCDScreenData_Current->TextArr[i].Position.x, LCDScreenData_Current->TextArr[i].Position.y,
-                        LCDScreenData_Current->TextArr[i].FloatVar,
+                        LCDScreenData_Current->TextArr[i].IntVar,
                         LCDScreenData_Current->TextArr[i].BackgroundColour,
                         LCDScreenData_Current->TextArr[i].TextColour,
                         LCDScreenData_Current->TextArr[i].FontSize);
-        break;
+          break;
 
-      default: // LCD_TEXT_VAR_TYPE_NON
-        Serial.print("Text: ");
-        Serial.println(LCDScreenData_Current->TextArr[i].Text);
-        Serial.print("Pos x: ");
-        Serial.println(LCDScreenData_Current->TextArr[i].Position.x);
-        Serial.print("Pos y: ");
-        Serial.println(LCDScreenData_Current->TextArr[i].Position.y);
-        Serial.print("Background Colour: ");
-        Serial.println(LCDScreenData_Current->TextArr[i].BackgroundColour);
-        Serial.print("TextColour: ");
-        Serial.println(LCDScreenData_Current->TextArr[i].TextColour);
-        Serial.print("FontSize: ");
-        Serial.println(LCDScreenData_Current->TextArr[i].FontSize);
-        
-        LCD_Print_Text(LCDScreenData_Current->TextArr[i].Text,
-                       LCDScreenData_Current->TextArr[i].Position.x, LCDScreenData_Current->TextArr[i].Position.y,
-                       LCDScreenData_Current->TextArr[i].BackgroundColour,
-                       LCDScreenData_Current->TextArr[i].TextColour,
-                       LCDScreenData_Current->TextArr[i].FontSize);
-        
-        break;
+        case LCD_TEXT_VAR_TYPE_FLOAT:
+          LCD_Print_Float(LCDScreenData_Current->TextArr[i].Text,
+                          LCDScreenData_Current->TextArr[i].Position.x, LCDScreenData_Current->TextArr[i].Position.y,
+                          LCDScreenData_Current->TextArr[i].FloatVar,
+                          LCDScreenData_Current->TextArr[i].BackgroundColour,
+                          LCDScreenData_Current->TextArr[i].TextColour,
+                          LCDScreenData_Current->TextArr[i].FontSize);
+          break;
+
+        default: // LCD_TEXT_VAR_TYPE_NON        
+          LCD_Print_Text(LCDScreenData_Current->TextArr[i].Text,
+                        LCDScreenData_Current->TextArr[i].Position.x, LCDScreenData_Current->TextArr[i].Position.y,
+                        LCDScreenData_Current->TextArr[i].BackgroundColour,
+                        LCDScreenData_Current->TextArr[i].TextColour,
+                        LCDScreenData_Current->TextArr[i].FontSize);
+          break;
+      }
     }
   }
-  
   
   /*
   UPDATE ON SCREEN TEXT, BUTTONS AND OBJECTS HERE
