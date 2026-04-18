@@ -6,6 +6,7 @@
 void Buttons_Init(void) {
   Screen_Buttons_Init(&ScreenData_MainMenu);
   Screen_Buttons_Init(&ScreenData_Data);
+  //Screen_Buttons_Init(&ScreenData_LimitsSetting);
   //Screen_Buttons_Init(&ScreenData_Keypad);
 }
 
@@ -44,15 +45,22 @@ void Adafruit_Screen_Init(void) {
 // Prints text to the LCD screen
 void LCD_Print_Text(const char *Text, uint16_t x, uint16_t y, uint16_t BackgroundColour, uint16_t TextColour, uint8_t TextSize) {
   tft.setTextColor(TextColour, BackgroundColour);
-  //Serial.print("BackgroundColour: ");
-  //Serial.println(BackgroundColour);
   tft.setTextSize(TextSize);
   tft.setCursor(x, y);
   tft.print(Text);
 }
 
-// Prints text to the LCD screen with an integer variable
-void LCD_Print_Int(const char *Text, uint16_t x, uint16_t y, uint16_t IntVar, uint16_t BackgroundColour, uint16_t TextColour, uint8_t TextSize) {
+// Prints text to the LCD screen with the addition of a text variable
+void LCD_Print_Text_Var(const char *Text, uint16_t x, uint16_t y, const char *TextVar, uint16_t BackgroundColour, uint16_t TextColour, uint8_t TextSize) {
+  tft.setTextColor(TextColour, BackgroundColour);
+  tft.setTextSize(TextSize);
+  tft.setCursor(x, y);
+  tft.print(Text);
+  tft.print(TextVar);
+}
+
+// Prints text to the LCD screen with the addition of an int variable
+void LCD_Print_Int_Var(const char *Text, uint16_t x, uint16_t y, uint16_t IntVar, uint16_t BackgroundColour, uint16_t TextColour, uint8_t TextSize) {
   tft.setTextColor(TextColour, BackgroundColour);
   tft.setTextSize(TextSize);
   tft.setCursor(x, y);
@@ -60,13 +68,13 @@ void LCD_Print_Int(const char *Text, uint16_t x, uint16_t y, uint16_t IntVar, ui
   tft.print(IntVar);
 }
 
-// Prints text to the LCD screen with a float variable
-void LCD_Print_Float(const char *Text, uint16_t x, uint16_t y, int FloatVar, uint16_t BackgroundColour, uint16_t TextColour, uint8_t TextSize) {
+// Prints text to the LCD screen with the addition of a float variable
+void LCD_Print_Float_Var(const char *Text, uint16_t x, uint16_t y, uint16_t FloatVar, uint16_t BackgroundColour, uint16_t TextColour, uint8_t TextSize) {
   tft.setTextColor(TextColour, BackgroundColour);
   tft.setTextSize(TextSize);
   tft.setCursor(x, y);
   tft.print(Text);
-  tft.print(FloatVar/10);
+  tft.print((float)FloatVar / FloatVarScaling, 1);
 }
 
 // Gets the coordinates of where the user touched the screen(If screen was touched)
@@ -190,30 +198,40 @@ void Update_Screen_Graphics(void) {
     for (i = 0; i < LCDScreenData_Current->TextsNum; i++) {
       switch (LCDScreenData_Current->TextArr[i].VarType) {
         case LCD_TEXT_VAR_TYPE_INT:
-          
-          LCD_Print_Int(LCDScreenData_Current->TextArr[i].Text,
-                        LCDScreenData_Current->TextArr[i].Position.x, LCDScreenData_Current->TextArr[i].Position.y,
-                        LCDScreenData_Current->TextArr[i].IntVar,
-                        LCDScreenData_Current->TextArr[i].BackgroundColour,
-                        LCDScreenData_Current->TextArr[i].TextColour,
-                        LCDScreenData_Current->TextArr[i].FontSize);
+          LCD_Print_Int_Var(LCDScreenData_Current->TextArr[i].Text,
+                            LCDScreenData_Current->TextArr[i].Position.x, LCDScreenData_Current->TextArr[i].Position.y,
+                            LCDScreenData_Current->TextArr[i].IntVar,
+                            LCDScreenData_Current->TextArr[i].BackgroundColour,
+                            LCDScreenData_Current->TextArr[i].TextColour,
+                            LCDScreenData_Current->TextArr[i].FontSize);
           break;
 
         case LCD_TEXT_VAR_TYPE_FLOAT:
-          LCD_Print_Float(LCDScreenData_Current->TextArr[i].Text,
-                          LCDScreenData_Current->TextArr[i].Position.x, LCDScreenData_Current->TextArr[i].Position.y,
-                          LCDScreenData_Current->TextArr[i].FloatVar,
-                          LCDScreenData_Current->TextArr[i].BackgroundColour,
-                          LCDScreenData_Current->TextArr[i].TextColour,
-                          LCDScreenData_Current->TextArr[i].FontSize);
+          LCD_Print_Float_Var(LCDScreenData_Current->TextArr[i].Text,
+                              LCDScreenData_Current->TextArr[i].Position.x, LCDScreenData_Current->TextArr[i].Position.y,
+                              (float)LCDScreenData_Current->TextArr[i].FloatVar,
+                              LCDScreenData_Current->TextArr[i].BackgroundColour,
+                              LCDScreenData_Current->TextArr[i].TextColour,
+                              LCDScreenData_Current->TextArr[i].FontSize);
+          break;
+
+        case LCD_TEXT_VAR_TYPE_TEXT:
+          if (LCDScreenData_Current->TextArr != nullptr) {
+            LCD_Print_Text_Var(LCDScreenData_Current->TextArr[i].Text,
+                               LCDScreenData_Current->TextArr[i].Position.x, LCDScreenData_Current->TextArr[i].Position.y,
+                               LCDScreenData_Current->TextArr[i].TextVar,
+                               LCDScreenData_Current->TextArr[i].BackgroundColour,
+                               LCDScreenData_Current->TextArr[i].TextColour,
+                               LCDScreenData_Current->TextArr[i].FontSize);
+          }
           break;
 
         default: // LCD_TEXT_VAR_TYPE_NON        
           LCD_Print_Text(LCDScreenData_Current->TextArr[i].Text,
-                        LCDScreenData_Current->TextArr[i].Position.x, LCDScreenData_Current->TextArr[i].Position.y,
-                        LCDScreenData_Current->TextArr[i].BackgroundColour,
-                        LCDScreenData_Current->TextArr[i].TextColour,
-                        LCDScreenData_Current->TextArr[i].FontSize);
+                         LCDScreenData_Current->TextArr[i].Position.x, LCDScreenData_Current->TextArr[i].Position.y,
+                         LCDScreenData_Current->TextArr[i].BackgroundColour,
+                         LCDScreenData_Current->TextArr[i].TextColour,
+                         LCDScreenData_Current->TextArr[i].FontSize);
           break;
       }
     }

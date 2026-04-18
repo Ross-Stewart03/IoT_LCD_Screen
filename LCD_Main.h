@@ -9,9 +9,11 @@
 #include <Wire.h>
 #include <SPI.h>
 
-// POT pins
+// Temporary POT pins
 #define ARDUINO_PIN_POT_TEMPERATURE A1
-#define ARDUINO_PIN_POT_HUMIDITY    A2  
+#define ARDUINO_PIN_POT_HUMIDITY    A2
+// Output Heater pin(LED)
+#define ARDUINO_PIN_HEATER  5
 // LCD touch screen pins
 #define ARDUINO_PIN_TFT_DC  6
 #define ARDUINO_PIN_TFT_CS  7
@@ -39,7 +41,8 @@
 typedef enum LCD_Text_Var_Type {
   LCD_TEXT_VAR_TYPE_NONE  = 0,
   LCD_TEXT_VAR_TYPE_INT   = 1,
-  LCD_TEXT_VAR_TYPE_FLOAT = 2
+  LCD_TEXT_VAR_TYPE_FLOAT = 2,
+  LCD_TEXT_VAR_TYPE_TEXT  = 3,
 }LCD_Text_Var_Type;
 
 // Menu enum defines
@@ -50,6 +53,11 @@ typedef enum LCD_Menu {
   ENUM_MENU_UNLOCK_LOCK_SCREEN      = 3,
   ENUM_MENU_KEYPAD_SCREEN           = 4
 }LCD_Menu;
+
+typedef struct Limits {
+  uint8_t High;
+  uint8_t Low;
+}Limits;
 
 typedef struct X_Y_Position {
   uint16_t x;
@@ -93,13 +101,14 @@ typedef struct LCD_Button {
 // Data about the text
 typedef struct LCD_Text {
   const char        *Text; // Adafuit limits this based on text width visually in pixels
-  int               FloatVar; // x10 so it can be stored as int, connection issue when data type is float
+  char              *TextVar;
+  uint16_t          FloatVar; // x10 so it can be stored as int, connection issue when data type is float
   X_Y_Position      Position;
   uint16_t          BackgroundColour;
   uint16_t          TextColour;
   int16_t           IntVar;
   uint8_t           FontSize;
-  LCD_Text_Var_Type VarType; // 0 = Non, 1 = Int, 2 = Float
+  LCD_Text_Var_Type VarType; // 0 = Non, 1 = Int, 2 = Float, 3 = Text
 }LCD_Text;
 
 // Data about the screen being shown
@@ -127,11 +136,13 @@ extern uint32_t         PreviousGraphicsTime;
 extern uint32_t         PreviousLogicTime;
 extern uint8_t          ChangeMenuFlag;
 extern uint32_t         CurrentTime;
+extern Limits           HeaterLimits;
 extern Adafruit_ILI9341 tft;
 extern Adafruit_FT6206  ts;
 
 // Functions
-void LCD_Print_Float(const char *Text, uint16_t x, uint16_t y, int FloatVar, uint16_t BackgroundColour, uint16_t TextColour, uint8_t TextSize);
+void LCD_Print_Text_Var(const char *Text, uint16_t x, uint16_t y, const char *TextVar, uint16_t BackgroundColour, uint16_t TextColour, uint8_t TextSize);
+void LCD_Print_Float(const char *Text, uint16_t x, uint16_t y, float FloatVar, uint16_t BackgroundColour, uint16_t TextColour, uint8_t TextSize);
 void LCD_Print_Int(const char *Text, uint16_t x, uint16_t y, uint16_t IntVar, uint16_t BackgroundColour, uint16_t TextColour, uint8_t TextSize);
 void LCD_Print_Text(const char *Text, uint16_t x, uint16_t y, uint16_t BackgroundColour, uint16_t TextColour, uint8_t TextSize);
 void Config_New_Menu_Screen (LCD_Screen_Data *Screen);

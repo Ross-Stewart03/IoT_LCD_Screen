@@ -13,11 +13,17 @@
 #include <stdint.h>
 #include "LCD_Main.h"
 
-// Extra spacing for positioning of objects
+// Spacing/positioning of objects
 #define SPACING_5_PIXELS   5
 #define SPACING_10_PIXELS  10
 #define SPACING_15_PIXELS  15
 #define SPACING_20_PIXELS  20
+#define POSITION_TEXT_X         70
+#define SCREEN_TEXT_INITIAL_Y   70
+#define SCREEN_TEXT_SPACING_Y   30
+
+// Scalling for float variables
+extern float FloatVarScaling;
 
 /*
  *
@@ -102,7 +108,9 @@ void ButtonHandler_Back_Button (void);
 #define TEXT_MAIN_MENU_TITLE_BACKGROUND_COLOUR  ILI9341_BLACK
 #define TEXT_MAIN_MENU_TITLE_TEXT_COLOUR        ILI9341_WHITE
 #define TEXT_MAIN_MENU_TITLE_DEFAULT_INT_VAL    0
+#define TEXT_MAIN_MENU_TITLE_VAL_SCALING        1.0f // No value to scale
 #define TEXT_MAIN_MENU_TITLE_FONT_SIZE          3
+#define TEXT_MAIN_MENU_TITLE_VAR_TYPE           LCD_TEXT_VAR_TYPE_NONE
 
 /* LCD_Rectangle */
 // Rectangle 1
@@ -146,19 +154,28 @@ void ButtonHandler_MainMenu_LimitsSettingsScreenSelect (void);
 #define BUTTON_DATA_BACK_BUTTON_ARRAY_INDEX   0
 #define BUTTON_DATA_ARRAY_NUM                 1
 // Texts
-#define TEXT_DATA_TITLE_ARRAY_INDEX   0
-#define TEXT_DATA_ARRAY_NUM           1 
+#define TEXT_DATA_TITLE_INDEX           0
+#define TEXT_DATA_TEMPERATURE_INDEX     1
+#define TEXT_DATA_HUMIDITY_INDEX        2
+#define TEXT_DATA_HEATER_ON_OFF_INDEX   3
+#define TEXT_DATA_HEATER_MODE_INDEX     4
+#define TEXT_DATA_ARRAY_NUM   5
+#define TEXT_DATA_HEATER_ON_OFF_TEXT_OFF_INDEX  0
+#define TEXT_DATA_HEATER_ON_OFF_TEXT_ON_INDEX   1
+#define TEXT_DATA_HEATER_MODE_TEXT_AUTOMA_INDEX   0
+#define TEXT_DATA_HEATER_MODE_TEXT_MANUAL_INDEX   1
+
 // Rectangles
 //#define RECTANGLE_DATA_[Specified name here]_ARRAY_INDEX      [Value here]
 #define RECTANGLE_DATA_ARRAY_NUM  0
 //#define RECTANGLE_DATA_MENU_[Specified name here]_ARRAY_[Colour 1]  [Value here]
 //#define RECTANGLE_DATA_MENU_[Specified name here]_ARRAY_NUM       [Value here]
 // Circles
-#define CIRCLE_DATA_HEATER_ARRAY_INDEX  0
-#define CIRCLE_DATA_ARRAY_NUM           1
-#define CIRCLE_DATA_HEATER_ARRAY_RED_INDEX    0
-#define CIRCLE_DATA_HEATER_ARRAY_GREEN_INDEX  1
-#define CIRCLE_DATA_HEADER_ARRAY_NUM          2
+#define CIRCLE_DATA_HEATER_ON_OFF_LED_ARRAY_INDEX   0
+#define CIRCLE_DATA_ARRAY_NUM                       1
+#define CIRCLE_DATA_HEATER_ON_OFF_LED_ARRAY_RED_INDEX    0
+#define CIRCLE_DATA_HEATER_ON_OFF_LED_ARRAY_GREEN_INDEX  1
+#define CIRCLE_DATA_HEATER_ON_OFF_LED_COLOURS_ARRAY_NUM   2
 
 /* LCD_Button */
 // [Button Name]
@@ -179,24 +196,48 @@ void ButtonHandler_MainMenu_LimitsSettingsScreenSelect (void);
 #define TEXT_DATA_TITLE_Y                   5
 #define TEXT_DATA_TITLE_BACKGROUND_COLOUR   ILI9341_BLACK
 #define TEXT_DATA_TITLE_TEXT_COLOUR         ILI9341_WHITE
-#define TEXT_DATA_TITLE_DEFAULT_INT_VAL     0
+#define TEXT_DATA_TITLE_DEFAULT_INT_VAL     1
 #define TEXT_DATA_TITLE_FONT_SIZE           3
-// Heater
-#define TEXT_DATA_HEATER_DEFAULT_FLOAT_VAL  0 // Stored value is x10 of actual
-#define TEXT_DATA_HEATER_X                  100
-#define TEXT_DATA_HEATER_Y                  70
-#define TEXT_DATA_HEATER_BACKGROUND_COLOUR  ILI9341_BLACK
-#define TEXT_DATA_HEATER_TEXT_COLOUR        ILI9341_WHITE
-#define TEXT_DATA_HEATER_DEFAULT_INT_VAL    0
-#define TEXT_DATA_HEATER_FONT_SIZE          2
+#define TEXT_DATA_TITLE_VAR_TYPE            LCD_TEXT_VAR_TYPE_NONE
+// Temperature
+#define TEXT_DATA_TEMPERATURE_DEFAULT_FLOAT_VAL   0 // Stored value is x10 of actual
+#define TEXT_DATA_TEMPERATURE_X                   POSITION_TEXT_X
+#define TEXT_DATA_TEMPERATURE_Y                   SCREEN_TEXT_INITIAL_Y
+#define TEXT_DATA_TEMPERATURE_BACKGROUND_COLOUR   ILI9341_BLACK
+#define TEXT_DATA_TEMPERATURE_TEXT_COLOUR         ILI9341_WHITE
+#define TEXT_DATA_TEMPERATURE_DEFAULT_INT_VAL     0
+#define TEXT_DATA_TEMPERATURE_FONT_SIZE           2
+#define TEXT_DATA_TEMPERATURE_VAR_TYPE            LCD_TEXT_VAR_TYPE_FLOAT
 // Humidity
-#define TEXT_DATA_HEATER_DEFAULT_FLOAT_VAL    0 // Stored value is x10 of actual
-#define TEXT_DATA_HUMIDITY_X                  100
-#define TEXT_DATA_HUMIDITY_Y                  100
+#define TEXT_DATA_HUMIDITY_DEFAULT_FLOAT_VAL  0 // Stored value is x10 of actual
+#define TEXT_DATA_HUMIDITY_X                  POSITION_TEXT_X
+#define TEXT_DATA_HUMIDITY_Y                  SCREEN_TEXT_INITIAL_Y + SCREEN_TEXT_SPACING_Y
 #define TEXT_DATA_HUMIDITY_BACKGROUND_COLOUR  ILI9341_BLACK
 #define TEXT_DATA_HUMIDITY_TEXT_COLOUR        ILI9341_WHITE
 #define TEXT_DATA_HUMIDITY_DEFAULT_INT_VAL    0
 #define TEXT_DATA_HUMIDITY_FONT_SIZE          2
+#define TEXT_DATA_HUMIDITY_VAR_TYPE           LCD_TEXT_VAR_TYPE_FLOAT
+// Heater On/Off
+#define TEXT_DATA_HEATER_ON_OFF_DEFAULT_FLOAT_VAL   0 // Stored value is x10 of actual
+#define TEXT_DATA_HEATER_ON_OFF_X                   POSITION_TEXT_X
+#define TEXT_DATA_HEATER_ON_OFF_Y                   SCREEN_TEXT_INITIAL_Y + (SCREEN_TEXT_SPACING_Y * (TEXT_DATA_HEATER_ON_OFF_INDEX - 1))
+#define TEXT_DATA_HEATER_ON_OFF_BACKGROUND_COLOUR   ILI9341_BLACK
+#define TEXT_DATA_HEATER_ON_OFF_TEXT_COLOUR         ILI9341_WHITE
+#define TEXT_DATA_HEATER_ON_OFF_DEFAULT_INT_VAL     0
+#define TEXT_DATA_HEATER_ON_OFF_VAL_SCALING         1.0f // No value to scale
+#define TEXT_DATA_HEATER_ON_OFF_FONT_SIZE           2
+#define TEXT_DATA_HEATER_ON_OFF_VAR_TYPE            LCD_TEXT_VAR_TYPE_TEXT
+// Heater Mode
+#define TEXT_DATA_HEATER_MODE_DEFAULT_FLOAT_VAL   0
+#define TEXT_DATA_HEATER_MODE_DEFAULT_FLOAT_VAL   0 // Stored value is x10 of actual
+#define TEXT_DATA_HEATER_MODE_X                   POSITION_TEXT_X
+#define TEXT_DATA_HEATER_MODE_Y                   SCREEN_TEXT_INITIAL_Y + (SCREEN_TEXT_SPACING_Y * (TEXT_DATA_HEATER_MODE_INDEX - 1))
+#define TEXT_DATA_HEATER_MODE_BACKGROUND_COLOUR   ILI9341_BLACK
+#define TEXT_DATA_HEATER_MODE_TEXT_COLOUR         ILI9341_WHITE
+#define TEXT_DATA_HEATER_MODE_DEFAULT_INT_VAL     0
+#define TEXT_DATA_HEATER_MODE_FONT_SIZE           2
+#define TEXT_DATA_HEATER_MODE_VAR_TYPE            LCD_TEXT_VAR_TYPE_TEXT
+
 
 /* LCD_Rectangle */
 // Rectangle 1
@@ -207,24 +248,30 @@ void ButtonHandler_MainMenu_LimitsSettingsScreenSelect (void);
 
 /* LCD_Circle */
 // Heater
-#define CIRCLE_DATA_HEATER_ON_OFF_LED_X       200
-#define CIRCLE_DATA_HEATER_ON_OFF_LED_Y       150
-#define CIRCLE_DATA_HEATER_ON_OFF_LED_RADIUS  20
+#define CIRCLE_DATA_HEATER_ON_OFF_LED_X       220
+#define CIRCLE_DATA_HEATER_ON_OFF_LED_Y       137
+#define CIRCLE_DATA_HEATER_ON_OFF_LED_RADIUS  10
 
 // LCD_Screen_Data
-#define SCREEN_DATA_BACKGROUND_COLOUR    ILI9341_BLACK
+#define SCREEN_DATA_BACKGROUND_COLOUR   ILI9341_BLACK
 
-// Global Variables
+// Global Variables/Structs
 extern LCD_Screen_Data ScreenData_Data;
-extern uint8_t HeaterState;
-extern uint8_t Temperature;
-extern uint8_t Humidity;
+extern uint8_t HeaterTargetTemperature;
+extern uint8_t HeaterOnOffState;
+extern float Temperature;
+extern uint8_t HeaterMode; // 0 = Auto(Default), 1 = Manual
+extern float Humidity;
 
 // Button Handlers
 //void ButtonHandler_Data_[Button Handler Name] (void);
 
 // Update Screen Logic
-void UpdateScreenLogic_MainMenu (void);
+#define HEATER_OFF  0
+#define HEATER_ON   1
+#define DEFAULT_VAL_HEATER_TARGET_TEMPERATURE   30 // Celcius
+#define HEATER_TARGET_TEMPERATURE_HYSTERESIS    2 // Celcius 
+void UpdateScreenLogic_DataScreen (void);
 /*
  *
  Data Screen
@@ -268,10 +315,7 @@ void UpdateScreenLogic_MainMenu (void);
 #define TEXT_LIMITS_SETTINGS_BUTTONS_ARRAY_INDEX_COUNTER  1
 #define TEXT_LIMITS_SETTINGS_BUTTONS_ARRAY_NUM            2
 
-// Global Variables Initalisation Value
-#define INIT_VALUE_SETTINGS_BUTTONS_COUNTER_LIMIT 30
-
-// Global Variables
+// Global Variables/Structs
 extern LCD_Screen_Data ScreenData_LimitsSettings;
 extern uint8_t CounterLimit;
 /*
@@ -331,7 +375,7 @@ extern uint8_t CounterLimit;
 #define TEXT_KEPAD_ARRAY_INDEX_COUNTER  1
 #define TEXT_KEPAD_ARRAY_NUM            2
 
-// Global variables
+// Global variables/Structs
 extern LCD_Screen_Data ScreenData_Keypad;
 extern uint16_t UserNumber;
 /*
