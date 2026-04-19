@@ -6,7 +6,7 @@
 void Buttons_Init(void) {
   Screen_Buttons_Init(&ScreenData_MainMenu);
   Screen_Buttons_Init(&ScreenData_Data);
-  //Screen_Buttons_Init(&ScreenData_LimitsSetting);
+  //Screen_Buttons_Init(&ScreenData_Settings);
   //Screen_Buttons_Init(&ScreenData_Keypad);
 }
 
@@ -142,9 +142,9 @@ void Update_Menu_Change_Config(void) {
       Config_New_Menu_Screen(&ScreenData_Data);
       break;
     /*
-    // Limits Settings screen
-    case ENUM_MENU_LIMITS_SETTINGS_SCREEN:
-      Config_New_Menu_Screen(&ScreenData_LimitsSettings);
+    // Settings screen
+    case ENUM_MENU_SETTINGS_SCREEN:
+      Config_New_Menu_Screen(&ScreenData_Settings);
       break;
 
     // Keypad screen

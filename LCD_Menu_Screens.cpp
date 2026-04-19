@@ -52,7 +52,7 @@ LCD_Button Back_Button = {
  */
 // Buttons
 Adafruit_GFX_Button GFX_Button_Main_Menu_Screen;
-Adafruit_GFX_Button GFX_Button_Limits_Settings_Screen;
+Adafruit_GFX_Button GFX_Button_Settings_Screen;
 LCD_Button ButtonsArr_MainMenuScreen[BUTTON_MAIN_MENU_ARRAY_NUM] = { 
   { // Data Select
     "Data",
@@ -66,17 +66,17 @@ LCD_Button ButtonsArr_MainMenuScreen[BUTTON_MAIN_MENU_ARRAY_NUM] = {
     TEXT_MAIN_MENU_DATA_SELECT_WIDTH_SACLE,
     TEXT_MAIN_MENU_DATA_SELECT_HEIGHT_SACLE
   },
-  { // Limits Setting Select
-    "Limits",
-    ButtonHandler_MainMenu_LimitsSettingsScreenSelect,
-    GFX_Button_Limits_Settings_Screen,
-    {BUTTON_MAIN_MENU_LIMITS_SETTINGS_SELECT_X, BUTTON_MAIN_MENU_LIMITS_SETTINGS_SELECT_Y},
-    {BUTTON_MAIN_MENU_LIMITS_SETTINGS_SELECT_WIDTH, BUTTON_MAIN_MENU_LIMITS_SETTINGS_SELECT_HEIGHT},
-    BUTTON_MAIN_MENU_LIMITS_SETTINGS_SELECT_BACKGROUND_COLOUR,
-    BUTTON_MAIN_MENU_LIMITS_SETTINGS_SELECT_TEXT_COLOUR,
-    BUTTON_MAIN_MENU_LIMITS_SETTINGS_SELECT_BORDER_COLOUR,
-    TEXT_MAIN_MENU_LIMITS_SETTINGS_SELECT_WIDTH_SACLE,
-    TEXT_MAIN_MENU_LIMITS_SETTINGS_SELECT_HEIGHT_SACLE
+  { // Settings Select
+    "Settings",
+    ButtonHandler_MainMenu_SettingsScreenSelect,
+    GFX_Button_Settings_Screen,
+    {BUTTON_MAIN_MENU_SETTINGS_SELECT_X, BUTTON_MAIN_MENU_SETTINGS_SELECT_Y},
+    {BUTTON_MAIN_MENU_SETTINGS_SELECT_WIDTH, BUTTON_MAIN_MENU_SETTINGS_SELECT_HEIGHT},
+    BUTTON_MAIN_MENU_SETTINGS_SELECT_BACKGROUND_COLOUR,
+    BUTTON_MAIN_MENU_SETTINGS_SELECT_TEXT_COLOUR,
+    BUTTON_MAIN_MENU_SETTINGS_SELECT_BORDER_COLOUR,
+    TEXT_MAIN_MENU_SETTINGS_SELECT_WIDTH_SACLE,
+    TEXT_MAIN_MENU_SETTINGS_SELECT_HEIGHT_SACLE
   }
 };
 
@@ -176,13 +176,15 @@ void ButtonHandler_MainMenu_DataScreenSelect (void) {
   Serial.println(Current_Menu_Screen);
   */
 }
-// Takes user to the Limits Settings screen
-void ButtonHandler_MainMenu_LimitsSettingsScreenSelect (void) {
+// Takes user to the Settings screen
+void ButtonHandler_MainMenu_SettingsScreenSelect (void) {
   ChangeMenuFlag = 1; // Set flag to change menus
 
-  Serial.println("Limits Setting Button pressed");
+  Serial.println("Settings Button pressed");
   Previous_Menu_Screen = Current_Menu_Screen;
-  Current_Menu_Screen = ENUM_MENU_LIMITS_SETTINGS_SCREEN;
+  Current_Menu_Screen = ENUM_MENU_KEYPAD_SCREEN;
+
+  // TODO: Need to set previous to Settings screen, then current to keypad to ask for password
 }
 
 /* Updates the logic for the screen
@@ -391,7 +393,7 @@ void UpdateScreenLogic_DataScreen(void) {
 
 /*
  *
-  Limits Settings
+  Settings Screen
  *
  */
  // TODO: User needs to be asked for a password before they are able to enter this menu(opens up keypad)
@@ -400,11 +402,11 @@ void UpdateScreenLogic_DataScreen(void) {
  // Need to have heater target limits, e.g min = 10C, max = 50C
  // User to be able to set upper/lower limits
  // User able to switch between manual/auto mode for heater.
- // Use in logic function Heater Mode ScreenData_LimitsSettings.TextArr[TEXT_DATA_HEATER_MODE_INDEX].TextVar = HeaterOnOffTextArr[HeaterMode];
+ // Use in logic function Heater Mode ScreenData_Settings.TextArr[TEXT_DATA_HEATER_MODE_INDEX].TextVar = HeaterOnOffTextArr[HeaterMode];
 
 /*
  *
-  Limits Settings
+  Screen Settings
  *
  */
 

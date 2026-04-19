@@ -21,7 +21,7 @@ uint32_t CurrentTime = 0;
 uint8_t HeaterTargetTemperature = DEFAULT_VAL_HEATER_TARGET_TEMPERATURE;
 uint8_t HeaterOnOffState = 0;
 uint8_t HeaterMode = 0; // Default Auto
-// Limits Settings screen
+// Settings screen
 // TODO: This should be
 // Keypad screen
 uint16_t UserNumber = 0;

@@ -47,11 +47,10 @@ typedef enum LCD_Text_Var_Type {
 
 // Menu enum defines
 typedef enum LCD_Menu {
-  ENUM_MENU_MAIN_MENU_SCREEN        = 0,
-  ENUM_MENU_DATA_SCREEN             = 1,
-  ENUM_MENU_LIMITS_SETTINGS_SCREEN  = 2,
-  ENUM_MENU_UNLOCK_LOCK_SCREEN      = 3,
-  ENUM_MENU_KEYPAD_SCREEN           = 4
+  ENUM_MENU_MAIN_MENU_SCREEN  = 0,
+  ENUM_MENU_DATA_SCREEN       = 1,
+  ENUM_MENU_SETTINGS_SCREEN   = 2,
+  ENUM_MENU_KEYPAD_SCREEN     = 3
 }LCD_Menu;
 
 typedef struct Limits {
