@@ -53,10 +53,10 @@ typedef enum LCD_Menu {
   ENUM_MENU_KEYPAD_SCREEN     = 3
 }LCD_Menu;
 
-typedef struct Limits {
-  uint8_t High;
-  uint8_t Low;
-}Limits;
+typedef struct Limits_Float {
+  float High;
+  float Low;
+}Limits_Float;
 
 typedef struct X_Y_Position {
   uint16_t x;
@@ -85,7 +85,7 @@ typedef struct LCD_Circle {
 // struct data about the button
 // init button structure -> initButton(Adafruit_GFX *gfx, int16_t x, int16_t y, uint16_t w, uint16_t h, uint16_t outline, , uint16_t textcolor, uint16_t fill, char *label, uint8_texsize_x,  uint8_texsize_y)
 typedef struct LCD_Button {
-  const char            *Text;
+  char                  *Text;
   void                  (*ButtonHandler)(void);
   Adafruit_GFX_Button   gfx;
   X_Y_Position          Position;
@@ -135,7 +135,7 @@ extern uint32_t         PreviousGraphicsTime;
 extern uint32_t         PreviousLogicTime;
 extern uint8_t          ChangeMenuFlag;
 extern uint32_t         CurrentTime;
-extern Limits           HeaterLimits;
+extern Limits_Float     HeaterLimits;
 extern Adafruit_ILI9341 tft;
 extern Adafruit_FT6206  ts;
 
@@ -144,6 +144,7 @@ void LCD_Print_Text_Var(const char *Text, uint16_t x, uint16_t y, const char *Te
 void LCD_Print_Float(const char *Text, uint16_t x, uint16_t y, float FloatVar, uint16_t BackgroundColour, uint16_t TextColour, uint8_t TextSize);
 void LCD_Print_Int(const char *Text, uint16_t x, uint16_t y, uint16_t IntVar, uint16_t BackgroundColour, uint16_t TextColour, uint8_t TextSize);
 void LCD_Print_Text(const char *Text, uint16_t x, uint16_t y, uint16_t BackgroundColour, uint16_t TextColour, uint8_t TextSize);
+float Check_Heater_Target_Temperature_Limits(float Temperature);
 void Config_New_Menu_Screen (LCD_Screen_Data *Screen);
 void Screen_Buttons_Init(LCD_Screen_Data *Screen);
 void Touch_Position_Update_Buttons(void);

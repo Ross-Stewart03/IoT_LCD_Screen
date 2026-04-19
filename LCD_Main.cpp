@@ -6,7 +6,7 @@
 void Buttons_Init(void) {
   Screen_Buttons_Init(&ScreenData_MainMenu);
   Screen_Buttons_Init(&ScreenData_Data);
-  //Screen_Buttons_Init(&ScreenData_Settings);
+  Screen_Buttons_Init(&ScreenData_Settings);
   //Screen_Buttons_Init(&ScreenData_Keypad);
 }
 
@@ -141,12 +141,12 @@ void Update_Menu_Change_Config(void) {
     case ENUM_MENU_DATA_SCREEN:
       Config_New_Menu_Screen(&ScreenData_Data);
       break;
-    /*
+
     // Settings screen
     case ENUM_MENU_SETTINGS_SCREEN:
       Config_New_Menu_Screen(&ScreenData_Settings);
       break;
-
+    /*
     // Keypad screen
     case ENUM_MENU_KEYPAD_SCREEN:
       Config_New_Menu_Screen(&ScreenData_Keypad);
@@ -247,6 +247,19 @@ void Update_Screen_Graphics(void) {
   each screen in that struct with arrays of everything, including the handers 
 
   */
+}
+
+float Check_Heater_Target_Temperature_Limits(float Temperature) {
+  Serial.println(Temperature);
+  if (Temperature < HeaterLimits.Low) {
+    return HeaterLimits.Low;
+  }
+  else if (Temperature > HeaterLimits.High) {
+    return HeaterLimits.High;
+  }
+  else {
+    return Temperature;
+  }
 }
 
 // Printing diagnotic infomation about the TFT LCD

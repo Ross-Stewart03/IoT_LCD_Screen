@@ -24,7 +24,7 @@ void ButtonHandler_Back_Button (void) {
   Previous_Menu_Screen = Temp_Menu_Screen;
 }
 
-// Button
+// Back Button
 Adafruit_GFX_Button GFX_Button_Back;
 LCD_Button Back_Button = {
   "Back",
@@ -182,8 +182,9 @@ void ButtonHandler_MainMenu_SettingsScreenSelect (void) {
 
   Serial.println("Settings Button pressed");
   Previous_Menu_Screen = Current_Menu_Screen;
-  Current_Menu_Screen = ENUM_MENU_KEYPAD_SCREEN;
 
+  // Change this back to KEYPAD, temporally  using settings to get screen working first 
+  Current_Menu_Screen = ENUM_MENU_SETTINGS_SCREEN;
   // TODO: Need to set previous to Settings screen, then current to keypad to ask for password
 }
 
@@ -232,7 +233,7 @@ LCD_Text TextArr_DataScreen[TEXT_DATA_ARRAY_NUM] = {
     TEXT_DATA_TITLE_TEXT_COLOUR,
     TEXT_DATA_TITLE_DEFAULT_INT_VAL,
     TEXT_DATA_TITLE_FONT_SIZE,
-    LCD_TEXT_VAR_TYPE_NONE
+    TEXT_DATA_TITLE_VAR_TYPE
   },
   { // Temperature
     "Temperature: ",
@@ -243,7 +244,7 @@ LCD_Text TextArr_DataScreen[TEXT_DATA_ARRAY_NUM] = {
     TEXT_DATA_TEMPERATURE_TEXT_COLOUR,
     TEXT_DATA_TEMPERATURE_DEFAULT_INT_VAL,
     TEXT_DATA_TEMPERATURE_FONT_SIZE,
-    LCD_TEXT_VAR_TYPE_FLOAT
+    TEXT_DATA_TEMPERATURE_VAR_TYPE
   },
   { // Humidity
     "Humidity: ",
@@ -377,8 +378,8 @@ void UpdateScreenLogic_DataScreen(void) {
       // Heater is on
       HeaterOnOffState = (Temperature > (HeaterTargetTemperature + HEATER_TARGET_TEMPERATURE_HYSTERESIS)) ? HEATER_OFF : HEATER_ON; // Temperature above (target + Hysteresis)? - Yes, turn off. No, turn on
     }
-    Serial.print("Heater State: ");
-    Serial.println(HeaterOnOffState);
+    //Serial.print("Heater State: ");
+    //Serial.println(HeaterOnOffState);
   }
   ScreenData_Data.CirclesArr[CIRCLE_DATA_HEATER_ON_OFF_LED_ARRAY_INDEX].CurrentColourIndex = HeaterOnOffState; // Updates LCD LED colour
   ScreenData_Data.TextArr[TEXT_DATA_HEATER_ON_OFF_INDEX].TextVar = HeaterOnOffTextArr[HeaterOnOffState]; // Updates Text of Heater On/Off
@@ -400,10 +401,243 @@ void UpdateScreenLogic_DataScreen(void) {
  // Need to add special buttons to allow user click on the value so they can manually enter the value through the keypad, The button should be same colour as the background and no text
  // Above need to be added to the general structs, to allow a generic format 
  // Need to have heater target limits, e.g min = 10C, max = 50C
- // User to be able to set upper/lower limits
+ // User to be able to set heater target temperature
  // User able to switch between manual/auto mode for heater.
  // Use in logic function Heater Mode ScreenData_Settings.TextArr[TEXT_DATA_HEATER_MODE_INDEX].TextVar = HeaterOnOffTextArr[HeaterMode];
+// Buttons
+Adafruit_GFX_Button GFX_Button_Settings_H_T_T_Value;
+Adafruit_GFX_Button GFX_Button_Settings_H_T_T_Value_Up;
+Adafruit_GFX_Button GFX_Button_Settings_H_T_T_Value_Down;
+Adafruit_GFX_Button GFX_Button_Settings_HeaterMode;
 
+LCD_Button ButtonsArr_SettingsScreen[BUTTON_SETTINGS_ARRAY_NUM] = {
+  { // Back Button
+    Back_Button
+  },
+  { // Heater target temperature value button (Invisible button)
+    "",
+    ButtonHandler_Settings_H_T_T_Value,
+    GFX_Button_Settings_H_T_T_Value,
+    {BUTTON_SETTINGS_H_T_T_VALUE_X,BUTTON_SETTINGS_H_T_T_VALUE_Y},
+    {BUTTON_SETTINGS_H_T_T_VALUE_WIDTH, BUTTON_SETTINGS_H_T_T_VALUE_HEIGHT},
+    BUTTON_SETTINGS_H_T_T_VALUE_BACKGROUND_COLOUR,
+    BUTTON_SETTINGS_H_T_T_VALUE_TEXT_COLOUR,
+    BUTTON_SETTINGS_H_T_T_VALUE_BORDER_COLOUR,
+    BUTTON_SETTINGS_H_T_T_VALUE_WIDTH_SACLE,
+    BUTTON_SETTINGS_H_T_T_VALUE_HEIGHT_SACLE
+  },
+  { // Heater target temperature up button
+    "/\\", // "/\" but have to add extra '\'
+    ButtonHandler_Settings_H_T_T_Value_Up,
+    GFX_Button_Settings_H_T_T_Value_Up,
+    {BUTTON_SETTINGS_H_T_T_VALUE_UP_X,BUTTON_SETTINGS_H_T_T_VALUE_UP_Y},
+    {BUTTON_SETTINGS_H_T_T_VALUE_UP_WIDTH, BUTTON_SETTINGS_H_T_T_VALUE_UP_HEIGHT},
+    BUTTON_SETTINGS_H_T_T_VALUE_UP_BACKGROUND_COLOUR,
+    BUTTON_SETTINGS_H_T_T_VALUE_UP_TEXT_COLOUR,
+    BUTTON_SETTINGS_H_T_T_VALUE_UP_BORDER_COLOUR,
+    BUTTON_SETTINGS_H_T_T_VALUE_UP_WIDTH_SACLE,
+    BUTTON_SETTINGS_H_T_T_VALUE_UP_HEIGHT_SACLE
+  },
+  { // Heater target temperature down button
+    "\\/", // "\/" but have to add extra '\'
+    ButtonHandler_Settings_H_T_T_Value_Down,
+    GFX_Button_Settings_H_T_T_Value_Down,
+    {BUTTON_SETTINGS_H_T_T_VALUE_DOWN_X,BUTTON_SETTINGS_H_T_T_VALUE_DOWN_Y},
+    {BUTTON_SETTINGS_H_T_T_VALUE_DOWN_WIDTH, BUTTON_SETTINGS_H_T_T_VALUE_DOWN_HEIGHT},
+    BUTTON_SETTINGS_H_T_T_VALUE_DOWN_BACKGROUND_COLOUR,
+    BUTTON_SETTINGS_H_T_T_VALUE_DOWN_TEXT_COLOUR,
+    BUTTON_SETTINGS_H_T_T_VALUE_DOWN_BORDER_COLOUR,
+    BUTTON_SETTINGS_H_T_T_VALUE_DOWN_WIDTH_SACLE,
+    BUTTON_SETTINGS_H_T_T_VALUE_DOWN_HEIGHT_SACLE
+  },
+  { // Heater Mode, doesn't show value
+    "",
+    ButtonHandler_Settings_HeaterMode,
+    GFX_Button_Settings_HeaterMode,
+    {BUTTON_SETTINGS_HEATER_MODE_X,BUTTON_SETTINGS_HEATER_MODE_Y},
+    {BUTTON_SETTINGS_HEATER_MODE_WIDTH, BUTTON_SETTINGS_HEATER_MODE_HEIGHT},
+    BUTTON_SETTINGS_HEATER_MODE_BACKGROUND_COLOUR,
+    BUTTON_SETTINGS_HEATER_MODE_TEXT_COLOUR,
+    BUTTON_SETTINGS_HEATER_MODE_BORDER_COLOUR,
+    BUTTON_SETTINGS_HEATER_MODE_WIDTH_SACLE,
+    BUTTON_SETTINGS_HEATER_MODE_HEIGHT_SACLE
+  }
+};
+
+/* Texts*/
+// Stores text of both states of Heater Mode
+char Text_Settings_Heater_Mode_Values_Arr[2][7] = {
+  " Auto ",
+  "Manual"
+};
+LCD_Text TextArr_SettingsScreen[TEXT_SETTINGS_ARRAY_NUM] = {
+  { // Title
+    "Settings",
+    nullptr, // No text variable being used
+    TEXT_SETTINGS_TITLE_DEFAULT_FLOAT_VAL,
+    {TEXT_SETTINGS_TITLE_X, TEXT_DATA_TITLE_Y},
+    TEXT_SETTINGS_TITLE_BACKGROUND_COLOUR,
+    TEXT_SETTINGS_TITLE_TEXT_COLOUR,
+    TEXT_SETTINGS_TITLE_DEFAULT_INT_VAL,
+    TEXT_SETTINGS_TITLE_FONT_SIZE,
+    TEXT_SETTINGS_TITLE_VAR_TYPE
+  },
+  { // Heater target temperature: pt1 (H_T_T_PT1)
+    "Heater",
+    nullptr, // No text variable being used
+    TEXT_SETTINGS_H_T_T_PT1_DEFAULT_FLOAT_VAL,
+    {TEXT_SETTINGS_H_T_T_PT1_X, TEXT_SETTINGS_H_T_T_PT1_Y},
+    TEXT_SETTINGS_H_T_T_PT1_BACKGROUND_COLOUR,
+    TEXT_SETTINGS_H_T_T_PT1_TEXT_COLOUR,
+    TEXT_SETTINGS_H_T_T_PT1_DEFAULT_INT_VAL,
+    TEXT_SETTINGS_H_T_T_PT1_FONT_SIZE,
+    TEXT_SETTINGS_H_T_T_PT1_VAR_TYPE
+  },
+  { // Heater target temperature: pt2 (H_T_T_PT2)
+    "target",
+    nullptr, // No text variable being used
+    TEXT_SETTINGS_H_T_T_PT2_DEFAULT_FLOAT_VAL,
+    {TEXT_SETTINGS_H_T_T_PT2_X, TEXT_SETTINGS_H_T_T_PT2_Y},
+    TEXT_SETTINGS_H_T_T_PT2_BACKGROUND_COLOUR,
+    TEXT_SETTINGS_H_T_T_PT2_TEXT_COLOUR,
+    TEXT_SETTINGS_H_T_T_PT2_DEFAULT_INT_VAL,
+    TEXT_SETTINGS_H_T_T_PT2_FONT_SIZE,
+    TEXT_SETTINGS_H_T_T_PT2_VAR_TYPE
+  },
+  { // Heater target temperature: pt3 (H_T_T_PT3)
+    "temperature",
+    nullptr, // No text value to use
+    TEXT_SETTINGS_H_T_T_PT3_DEFAULT_FLOAT_VAL,
+    {TEXT_SETTINGS_H_T_T_PT3_X, TEXT_SETTINGS_H_T_T_PT3_Y},
+    TEXT_SETTINGS_H_T_T_PT3_BACKGROUND_COLOUR,
+    TEXT_SETTINGS_H_T_T_PT3_TEXT_COLOUR,
+    TEXT_SETTINGS_H_T_T_PT3_DEFAULT_INT_VAL,
+    TEXT_SETTINGS_H_T_T_PT3_FONT_SIZE,
+    TEXT_SETTINGS_H_T_T_PT3_VAR_TYPE
+  },
+  { // Heater target temperature: pt4 (H_T_T_PT4). This contains the value for Heater Target Temperature
+    ":",
+    nullptr, // No text value to use
+    TEXT_SETTINGS_H_T_T_PT4_DEFAULT_FLOAT_VAL,
+    {TEXT_SETTINGS_H_T_T_PT4_X, TEXT_SETTINGS_H_T_T_PT4_Y},
+    TEXT_SETTINGS_H_T_T_PT4_BACKGROUND_COLOUR,
+    TEXT_SETTINGS_H_T_T_PT4_TEXT_COLOUR,
+    TEXT_SETTINGS_H_T_T_PT4_DEFAULT_INT_VAL,
+    TEXT_SETTINGS_H_T_T_PT4_FONT_SIZE,
+    TEXT_SETTINGS_H_T_T_PT4_VAR_TYPE
+  },
+  { // Heater Mode, Doesn't store a value, button in place to show user it can be clicked
+    "Heater Mode:",
+    nullptr, // No text value to use
+    TEXT_SETTINGS_HEATER_MODE_DEFAULT_FLOAT_VAL,
+    {TEXT_SETTINGS_HEATER_MODE_X, TEXT_SETTINGS_HEATER_MODE_Y},
+    TEXT_SETTINGS_HEATER_MODE_BACKGROUND_COLOUR,
+    TEXT_SETTINGS_HEATER_MODE_TEXT_COLOUR,
+    TEXT_SETTINGS_HEATER_MODE_DEFAULT_INT_VAL,
+    TEXT_SETTINGS_HEATER_MODE_FONT_SIZE,
+    TEXT_SETTINGS_HEATER_MODE_VAR_TYPE
+  },
+  { // Heater Mode Value, only shows the value in seprate place so it can be placed ontop of the button
+    "",
+    Text_Settings_Heater_Mode_Values_Arr[0], // "Auto" as default value
+    TEXT_SETTINGS_HEATER_MODE_VALUE_DEFAULT_FLOAT_VAL,
+    {TEXT_SETTINGS_HEATER_MODE_VALUE_X, TEXT_SETTINGS_HEATER_MODE_VALUE_Y},
+    TEXT_SETTINGS_HEATER_MODE_VALUE_BACKGROUND_COLOUR,
+    TEXT_SETTINGS_HEATER_MODE_VALUE_TEXT_COLOUR,
+    TEXT_SETTINGS_HEATER_MODE_VALUE_DEFAULT_INT_VAL,
+    TEXT_SETTINGS_HEATER_MODE_VALUE_FONT_SIZE,
+    TEXT_SETTINGS_HEATER_MODE_VALUE_VAR_TYPE
+  }
+};
+
+// Rectangle colours
+/* No rectangles are drawn therefore no colours needed
+uint16_t RectangleColours_SettingsScreen[] = { 
+  // Heater target temperature value highlight (H_T_T_VAL)
+  ILI9341_DARKGREY // Index 0 is default colour
+};
+
+// Rectangle shapes
+LCD_Rectangle RectanglesArr_SettingsScreen[RECTANGLE_SETTINGS_ARRAY_NUM] = {
+  RectangleColours_SettingsScreen,
+  {RECTANGLE_SETTINGS_H_T_T_VALUE_X, RECTANGLE_SETTINGS_H_T_T_VALUE_Y},
+  {RECTANGLE_SETTINGS_H_T_T_VALUE_WIDTH, RECTANGLE_SETTINGS_H_T_T_VALUE_HEIGHT},
+  RECTANGLE_SETTINGS_H_T_T_VALUE_ARRAY_GREY_INDEX // Default colour
+};*/
+
+// Circle colours
+/* No circles are drawn therefore no colours needed
+uint16_t CircleColours_SettingsScreen[2] = { 
+};
+
+// Circle shapes
+/* No circles are drawn
+LCD_Circle CirclesArr_DataScreen[CIRCLE_DATA_ARRAY_NUM] = {
+  { // Heater on/off LED
+    CircleColours_DataScreen,
+    {CIRCLE_SETTINGS_[Circle name here]_X, CIRCLE_SETTINGS_[Circle name here]_Y},
+    CIRCLE_SETTINGS_[Circle name here]_RADIUS,
+    CIRCLE_SETTINGS_[Circle name here]_ARRAY_INDEX // Default colour
+  }
+};*/
+
+// Heater Target Temperature
+Limits_Float HeaterLimits = {
+  LIMITS_HIGH_H_T_T,
+  LIMITS_LOW_H_T_T
+};
+
+// Screen Data
+LCD_Screen_Data ScreenData_Settings = {
+  ButtonsArr_SettingsScreen,
+  TextArr_SettingsScreen,
+  nullptr, // No rectangles to be drawn
+  nullptr, // No circles to be drawn
+  UpdateScreenLogic_SettingsScreen,
+  SCREEN_SETTINGS_BACKGROUND_COLOUR,
+  BUTTON_SETTINGS_ARRAY_NUM,
+  TEXT_SETTINGS_ARRAY_NUM,
+  RECTANGLE_SETTINGS_ARRAY_NUM,
+  CIRCLE_SETTINGS_ARRAY_NUM,
+  ENUM_MENU_SETTINGS_SCREEN
+};
+
+// Button Hanlders
+void ButtonHandler_Settings_H_T_T_Value (void) {
+  // TODO: Needs to call call keybaord to get a value
+  // Check user entered value against limits and set the value
+  // Use HeaterTargetTemperature = Check_Heater_Target_Temperature_Limits([keypad function here]);
+  Serial.println("Heater Target Temperature Value button pressed");
+}
+void ButtonHandler_Settings_H_T_T_Value_Up (void) {
+  // TODO: Check new value against limits and set the value
+  Serial.println("Heater Target Temperature Up button pressed");
+  HeaterTargetTemperature = Check_Heater_Target_Temperature_Limits(HeaterTargetTemperature + 0.1);
+  TextArr_SettingsScreen[TEXT_SETTINGS_H_T_T_PT4_INDEX].FloatVar = (uint16_t)(HeaterTargetTemperature * FloatVarScaling); // Update screen value and scale x10
+  Serial.println(TextArr_SettingsScreen[TEXT_SETTINGS_H_T_T_PT4_INDEX].FloatVar);
+}
+void ButtonHandler_Settings_H_T_T_Value_Down (void) {
+  // TODO: Check new value against limits and set the value
+  Serial.println("Heater Target Temperature Down button pressed");
+  HeaterTargetTemperature = Check_Heater_Target_Temperature_Limits(HeaterTargetTemperature - 0.1);
+  TextArr_SettingsScreen[TEXT_SETTINGS_H_T_T_PT4_INDEX].FloatVar = (uint16_t)(HeaterTargetTemperature * FloatVarScaling);
+}
+void ButtonHandler_Settings_HeaterMode (void) {
+  // TODO: When clicked, latch between "Auto" and "Manual"
+  
+  // Switch to other mode
+  HeaterMode = !HeaterMode;
+
+  // Update LCD text
+  ScreenData_Settings.TextArr[TEXT_SETTINGS_HEATER_MODE_VALUE_INDEX].TextVar = Text_Settings_Heater_Mode_Values_Arr[HeaterMode]; // Settings screen
+  ScreenData_Data.TextArr[TEXT_DATA_HEATER_MODE_INDEX].TextVar = HeaterModeTextArr[HeaterMode]; // Data screen
+
+  // TODO: Also need to allow user to turn heater when in manual mode
+}
+// Updates the logic for the screen
+void UpdateScreenLogic_SettingsScreen(void) {
+
+}
 /*
  *
   Screen Settings

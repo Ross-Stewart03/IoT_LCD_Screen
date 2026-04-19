@@ -18,11 +18,9 @@ uint32_t PreviousLogicTime = 0;
 uint8_t ChangeMenuFlag = 0;
 uint32_t CurrentTime = 0;
 // Data screen
-uint8_t HeaterTargetTemperature = DEFAULT_VAL_HEATER_TARGET_TEMPERATURE;
+float HeaterTargetTemperature = DEFAULT_VAL_HEATER_TARGET_TEMPERATURE;
 uint8_t HeaterOnOffState = 0;
 uint8_t HeaterMode = 0; // Default Auto
-// Settings screen
-// TODO: This should be
 // Keypad screen
 uint16_t UserNumber = 0;
 
