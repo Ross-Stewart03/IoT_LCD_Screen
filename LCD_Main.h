@@ -95,6 +95,7 @@ typedef struct LCD_Button {
   uint16_t              BorderColour;
   uint8_t               TextWidthScale;
   uint8_t               TextHeightScale;
+  uint8_t               Available; // Allows button to be pressed on screen, 0 = No, 1 = Yes
 }LCD_Button;
 
 // Data about the text

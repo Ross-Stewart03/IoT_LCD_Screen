@@ -89,8 +89,12 @@ void Touch_Position_Update_Buttons(void) {
     for (int i = 0; i < LCDScreenData_Current->ButtonsNum; i++) {
       LCDScreenData_Current->ButtonsArr[i].gfx.press(LCDScreenData_Current->ButtonsArr[i].gfx.contains(LCD_Touch_Position.x, LCD_Touch_Position.y)); // Checks if user's touch position matches the corresponding button position. Updates 'justPress()'
       // Checks if user pressed the button, then calls its handler
-      if (LCDScreenData_Current->ButtonsArr[i].gfx.justPressed()) { 
-        LCDScreenData_Current->ButtonsArr[i].ButtonHandler();
+
+      if (LCDScreenData_Current->ButtonsArr[i].gfx.justPressed()) {
+        if (LCDScreenData_Current->ButtonsArr[i].Available) { //Need to use new LCD_Button member "Available", need this for Heater manual mode. Remeber to make Default macros on availability for LCD_Button instances
+          //Still need to add in button that will be hidden by default on Data screen for heater on/off in manual mode and its macros
+          LCDScreenData_Current->ButtonsArr[i].ButtonHandler();
+        }
       }
     }
   }

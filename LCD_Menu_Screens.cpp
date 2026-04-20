@@ -36,7 +36,8 @@ LCD_Button Back_Button = {
   BUTTON_BACK_TEXT_COLOUR,
   BUTTON_BACK_BORDER_COLOUR,
   BUTTON_BACK_WIDTH_SACLE,
-  BUTTON_BACK_HEIGHT_SACLE
+  BUTTON_BACK_HEIGHT_SACLE,
+  BUTTON_BACK_DEFAULT_AVAILABLE
 };
 /*
  *
@@ -63,8 +64,9 @@ LCD_Button ButtonsArr_MainMenuScreen[BUTTON_MAIN_MENU_ARRAY_NUM] = {
     BUTTON_MAIN_MENU_DATA_SELECT_BACKGROUND_COLOUR,
     BUTTON_MAIN_MENU_DATA_SELECT_TEXT_COLOUR,
     BUTTON_MAIN_MENU_DATA_SELECT_BORDER_COLOUR,
-    TEXT_MAIN_MENU_DATA_SELECT_WIDTH_SACLE,
-    TEXT_MAIN_MENU_DATA_SELECT_HEIGHT_SACLE
+    BUTTON_MAIN_MENU_DATA_SELECT_WIDTH_SACLE,
+    BUTTON_MAIN_MENU_DATA_SELECT_HEIGHT_SACLE,
+    BUTTON_MAIN_MENU_DATA_SELECT_DEFAULT_AVAILABLE
   },
   { // Settings Select
     "Settings",
@@ -75,8 +77,9 @@ LCD_Button ButtonsArr_MainMenuScreen[BUTTON_MAIN_MENU_ARRAY_NUM] = {
     BUTTON_MAIN_MENU_SETTINGS_SELECT_BACKGROUND_COLOUR,
     BUTTON_MAIN_MENU_SETTINGS_SELECT_TEXT_COLOUR,
     BUTTON_MAIN_MENU_SETTINGS_SELECT_BORDER_COLOUR,
-    TEXT_MAIN_MENU_SETTINGS_SELECT_WIDTH_SACLE,
-    TEXT_MAIN_MENU_SETTINGS_SELECT_HEIGHT_SACLE
+    BUTTON_MAIN_MENU_SETTINGS_SELECT_WIDTH_SACLE,
+    BUTTON_MAIN_MENU_SETTINGS_SELECT_HEIGHT_SACLE,
+    BUTTON_MAIN_MENU_SETTINGS_SELECT_DEFAULT_AVAILABLE
   }
 };
 
@@ -205,9 +208,23 @@ void UpdateScreenLogic_MainMenuScreen(void) {
  *
  */
 // Buttons
+Adafruit_GFX_Button GFX_Button_Data_Heater_On_Off;
 LCD_Button ButtonsArr_DataScreen[BUTTON_DATA_ARRAY_NUM] = {
   { // Back Button
     Back_Button
+  },
+  { // Heater On/Off (Invisible)
+    "",
+    ButtonHandler_Data_HeaterOnOff,
+    GFX_Button_Data_Heater_On_Off,
+    {BUTTON_DATA_HEATER_ON_OFF_X,BUTTON_DATA_HEATER_ON_OFF_Y},
+    {BUTTON_DATA_HEATER_ON_OFF_WIDTH, BUTTON_DATA_HEATER_ON_OFF_HEIGHT},
+    BUTTON_DATA_HEATER_ON_OFF_BACKGROUND_COLOUR,
+    BUTTON_DATA_HEATER_ON_OFF_TEXT_COLOUR,
+    BUTTON_DATA_HEATER_ON_OFF_BORDER_COLOUR,
+    BUTTON_DATA_HEATER_ON_OFF_WIDTH_SACLE,
+    BUTTON_DATA_HEATER_ON_OFF_HEIGHT_SACLE,
+    BUTTON_DATA_HEATER_ON_OFF_DEFAULT_AVAILABLE
   }
 };
 
@@ -338,10 +355,16 @@ LCD_Screen_Data ScreenData_Data = {
 };
 
 // Button Hanlders
-// No button handlers are needed for Data screen
-// Buttons
-// No buttons(apart from back button) are needed for Data screen
-
+void ButtonHandler_Data_HeaterOnOff(void) {
+  // Allows user to turn the heater on/off (Only in manual mode)
+  Serial.println("Heater On Off button pressed");
+  HeaterOnOffState = !HeaterOnOffState;
+  ScreenData_Data.TextArr[BUTTON_DATA_HEATER_ON_OFF_ARRAY_INDEX].TextVar = HeaterOnOffTextArr[HeaterOnOffState];
+  Serial.print("HeaterOnOffState: ");
+  Serial.println(HeaterOnOffState);
+  Serial.print("HeaterOnOffState(LCD): ");
+  Serial.println(ScreenData_Data.TextArr[BUTTON_DATA_HEATER_ON_OFF_ARRAY_INDEX].TextVar);
+}
 // Updates the logic for the screen
 void UpdateScreenLogic_DataScreen(void) {
   // TODO: 
@@ -424,7 +447,8 @@ LCD_Button ButtonsArr_SettingsScreen[BUTTON_SETTINGS_ARRAY_NUM] = {
     BUTTON_SETTINGS_H_T_T_VALUE_TEXT_COLOUR,
     BUTTON_SETTINGS_H_T_T_VALUE_BORDER_COLOUR,
     BUTTON_SETTINGS_H_T_T_VALUE_WIDTH_SACLE,
-    BUTTON_SETTINGS_H_T_T_VALUE_HEIGHT_SACLE
+    BUTTON_SETTINGS_H_T_T_VALUE_HEIGHT_SACLE,
+    BUTTON_SETTINGS_H_T_T_VALUE_DEFAULT_AVAILABLE
   },
   { // Heater target temperature up button
     "/\\", // "/\" but have to add extra '\'
@@ -436,7 +460,8 @@ LCD_Button ButtonsArr_SettingsScreen[BUTTON_SETTINGS_ARRAY_NUM] = {
     BUTTON_SETTINGS_H_T_T_VALUE_UP_TEXT_COLOUR,
     BUTTON_SETTINGS_H_T_T_VALUE_UP_BORDER_COLOUR,
     BUTTON_SETTINGS_H_T_T_VALUE_UP_WIDTH_SACLE,
-    BUTTON_SETTINGS_H_T_T_VALUE_UP_HEIGHT_SACLE
+    BUTTON_SETTINGS_H_T_T_VALUE_UP_HEIGHT_SACLE,
+    BUTTON_SETTINGS_H_T_T_VALUE_UP_DEFAULT_AVAILABLE
   },
   { // Heater target temperature down button
     "\\/", // "\/" but have to add extra '\'
@@ -448,7 +473,8 @@ LCD_Button ButtonsArr_SettingsScreen[BUTTON_SETTINGS_ARRAY_NUM] = {
     BUTTON_SETTINGS_H_T_T_VALUE_DOWN_TEXT_COLOUR,
     BUTTON_SETTINGS_H_T_T_VALUE_DOWN_BORDER_COLOUR,
     BUTTON_SETTINGS_H_T_T_VALUE_DOWN_WIDTH_SACLE,
-    BUTTON_SETTINGS_H_T_T_VALUE_DOWN_HEIGHT_SACLE
+    BUTTON_SETTINGS_H_T_T_VALUE_DOWN_HEIGHT_SACLE,
+    BUTTON_SETTINGS_H_T_T_VALUE_DOWN_DEFAULT_AVAILABLE
   },
   { // Heater Mode, doesn't show value
     "",
@@ -460,7 +486,8 @@ LCD_Button ButtonsArr_SettingsScreen[BUTTON_SETTINGS_ARRAY_NUM] = {
     BUTTON_SETTINGS_HEATER_MODE_TEXT_COLOUR,
     BUTTON_SETTINGS_HEATER_MODE_BORDER_COLOUR,
     BUTTON_SETTINGS_HEATER_MODE_WIDTH_SACLE,
-    BUTTON_SETTINGS_HEATER_MODE_HEIGHT_SACLE
+    BUTTON_SETTINGS_HEATER_MODE_HEIGHT_SACLE,
+    BUTTON_SETTINGS_HEATER_MODE_DEFAULT_AVAILABLE
   }
 };
 
@@ -631,6 +658,9 @@ void ButtonHandler_Settings_HeaterMode (void) {
   // Update LCD text
   ScreenData_Settings.TextArr[TEXT_SETTINGS_HEATER_MODE_VALUE_INDEX].TextVar = Text_Settings_Heater_Mode_Values_Arr[HeaterMode]; // Settings screen
   ScreenData_Data.TextArr[TEXT_DATA_HEATER_MODE_INDEX].TextVar = HeaterModeTextArr[HeaterMode]; // Data screen
+  
+  // Update Data Screen Heater On Off button available
+  ScreenData_Data.ButtonsArr[BUTTON_DATA_HEATER_ON_OFF_ARRAY_INDEX].Available = HeaterMode;
 
   // TODO: Also need to allow user to turn heater when in manual mode
 }
