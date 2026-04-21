@@ -88,6 +88,7 @@ LCD_Text TextArr_MainMenuScreen[TEXT_DATA_ARRAY_NUM] = {
   { // Title
     "Main Menu",
     nullptr, // No text variable being used
+    nullptr, // Has no units
     TEXT_MAIN_MENU_TITLE_DEFAULT_FLOAT_VAL,
     {TEXT_MAIN_MENU_TITLE_X, TEXT_MAIN_MENU_TITLE_Y},
     TEXT_MAIN_MENU_TITLE_BACKGROUND_COLOUR,
@@ -259,6 +260,7 @@ LCD_Text TextArr_DataScreen[TEXT_DATA_ARRAY_NUM] = {
   { // Title
     "Data",
     nullptr, // No text variable being used
+    nullptr, // Has no units
     TEXT_DATA_TITLE_DEFAULT_FLOAT_VAL,
     {TEXT_DATA_TITLE_X, TEXT_DATA_TITLE_Y},
     TEXT_DATA_TITLE_BACKGROUND_COLOUR,
@@ -270,6 +272,7 @@ LCD_Text TextArr_DataScreen[TEXT_DATA_ARRAY_NUM] = {
   { // Temperature
     "Temperature: ",
     nullptr, // No text variable being used
+    "C",
     TEXT_DATA_TEMPERATURE_DEFAULT_FLOAT_VAL,
     {TEXT_DATA_TEMPERATURE_X, TEXT_DATA_TEMPERATURE_Y},
     TEXT_DATA_TEMPERATURE_BACKGROUND_COLOUR,
@@ -281,6 +284,7 @@ LCD_Text TextArr_DataScreen[TEXT_DATA_ARRAY_NUM] = {
   { // Humidity
     "Humidity: ",
     nullptr, // No text variable being used
+    "%",
     TEXT_DATA_HUMIDITY_DEFAULT_FLOAT_VAL,
     {TEXT_DATA_HUMIDITY_X, TEXT_DATA_HUMIDITY_Y},
     TEXT_DATA_HUMIDITY_BACKGROUND_COLOUR,
@@ -292,6 +296,7 @@ LCD_Text TextArr_DataScreen[TEXT_DATA_ARRAY_NUM] = {
   { // Heater On/Off
     "Heater: ",
     TEXT_DATA_HEATER_ON_OFF_DEFAULT_TEXT_VAL,
+    nullptr, // Has no units
     TEXT_DATA_HEATER_ON_OFF_DEFAULT_FLOAT_VAL,
     {TEXT_DATA_HEATER_ON_OFF_X, TEXT_DATA_HEATER_ON_OFF_Y},
     TEXT_DATA_HEATER_ON_OFF_BACKGROUND_COLOUR,
@@ -303,6 +308,7 @@ LCD_Text TextArr_DataScreen[TEXT_DATA_ARRAY_NUM] = {
   { // Heater Mode
     "Heater Mode:",
     TEXT_DATA_HEATER_MODE_DEFAULT_TEXT_VAL,
+    nullptr, // Has no units
     TEXT_DATA_HEATER_MODE_DEFAULT_FLOAT_VAL,
     {TEXT_DATA_HEATER_MODE_X, TEXT_DATA_HEATER_MODE_Y},
     TEXT_DATA_HEATER_MODE_BACKGROUND_COLOUR,
@@ -314,6 +320,7 @@ LCD_Text TextArr_DataScreen[TEXT_DATA_ARRAY_NUM] = {
   { // Heater Mode Value, only shows the value in seprate place so it can be placed ontop of the button
     "",
     HeaterModeTextArr[TEXT_DATA_HEATER_MODE_TEXT_AUTO_INDEX], // "Auto" as default value
+    nullptr, // Has no units
     TEXT_DATA_HEATER_MODE_VALUE_DEFAULT_FLOAT_VAL,
     {TEXT_DATA_HEATER_MODE_VALUE_X, TEXT_DATA_HEATER_MODE_VALUE_Y},
     TEXT_DATA_HEATER_MODE_VALUE_BACKGROUND_COLOUR,
@@ -520,6 +527,7 @@ LCD_Text TextArr_SettingsScreen[TEXT_SETTINGS_ARRAY_NUM] = {
   { // Title
     "Settings",
     nullptr, // No text variable being used
+    nullptr, // Has no units
     TEXT_SETTINGS_TITLE_DEFAULT_FLOAT_VAL,
     {TEXT_SETTINGS_TITLE_X, TEXT_DATA_TITLE_Y},
     TEXT_SETTINGS_TITLE_BACKGROUND_COLOUR,
@@ -531,6 +539,7 @@ LCD_Text TextArr_SettingsScreen[TEXT_SETTINGS_ARRAY_NUM] = {
   { // Heater target temperature: pt1 (H_T_T_PT1)
     "Heater",
     nullptr, // No text variable being used
+    nullptr, // Has no units
     TEXT_SETTINGS_H_T_T_PT1_DEFAULT_FLOAT_VAL,
     {TEXT_SETTINGS_H_T_T_PT1_X, TEXT_SETTINGS_H_T_T_PT1_Y},
     TEXT_SETTINGS_H_T_T_PT1_BACKGROUND_COLOUR,
@@ -542,6 +551,7 @@ LCD_Text TextArr_SettingsScreen[TEXT_SETTINGS_ARRAY_NUM] = {
   { // Heater target temperature: pt2 (H_T_T_PT2)
     "target",
     nullptr, // No text variable being used
+    nullptr, // Has no units
     TEXT_SETTINGS_H_T_T_PT2_DEFAULT_FLOAT_VAL,
     {TEXT_SETTINGS_H_T_T_PT2_X, TEXT_SETTINGS_H_T_T_PT2_Y},
     TEXT_SETTINGS_H_T_T_PT2_BACKGROUND_COLOUR,
@@ -553,6 +563,7 @@ LCD_Text TextArr_SettingsScreen[TEXT_SETTINGS_ARRAY_NUM] = {
   { // Heater target temperature: pt3 (H_T_T_PT3)
     "temperature",
     nullptr, // No text value to use
+    nullptr, // Has no units
     TEXT_SETTINGS_H_T_T_PT3_DEFAULT_FLOAT_VAL,
     {TEXT_SETTINGS_H_T_T_PT3_X, TEXT_SETTINGS_H_T_T_PT3_Y},
     TEXT_SETTINGS_H_T_T_PT3_BACKGROUND_COLOUR,
@@ -564,6 +575,7 @@ LCD_Text TextArr_SettingsScreen[TEXT_SETTINGS_ARRAY_NUM] = {
   { // Heater target temperature: pt4 (H_T_T_PT4). This contains the value for Heater Target Temperature
     ":",
     nullptr, // No text value to use
+    "C",
     TEXT_SETTINGS_H_T_T_PT4_DEFAULT_FLOAT_VAL,
     {TEXT_SETTINGS_H_T_T_PT4_X, TEXT_SETTINGS_H_T_T_PT4_Y},
     TEXT_SETTINGS_H_T_T_PT4_BACKGROUND_COLOUR,
@@ -852,6 +864,7 @@ LCD_Text TextArr_KeypadScreen[TEXT_KEYPAD_ARRAY_NUM] = {
   { // Title
     "", // No default text as it depends on what calls it
     nullptr, // No text variable being used
+    nullptr, // Has no units
     TEXT_KEYPAD_TITLE_DEFAULT_FLOAT_VAL,
     {TEXT_KEYPAD_TITLE_X, TEXT_DATA_TITLE_Y},
     TEXT_KEYPAD_TITLE_BACKGROUND_COLOUR,
@@ -863,6 +876,7 @@ LCD_Text TextArr_KeypadScreen[TEXT_KEYPAD_ARRAY_NUM] = {
   { // User's value
     "", 
     nullptr, // No text variable being used
+    nullptr, // Has no units
     TEXT_KEYPAD_USER_VALUE_DEFAULT_FLOAT_VAL,
     {_X, TEXT_KEYPAD_USER_VALUE_Y},
     TEXT_KEYPAD_USER_VALUE_BACKGROUND_COLOUR,

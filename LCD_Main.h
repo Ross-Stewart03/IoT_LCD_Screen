@@ -100,8 +100,9 @@ typedef struct LCD_Button {
 
 // Data about the text
 typedef struct LCD_Text {
-  char        *Text; // Adafuit limits this based on text width visually in pixels
+  char              *Text; // Adafuit limits this based on text width visually in pixels
   char              *TextVar;
+  char              *TextVarUnits;
   uint16_t          FloatVar; // x10 so it can be stored as int, connection issue when data type is float
   X_Y_Position      Position;
   uint16_t          BackgroundColour;
@@ -141,8 +142,8 @@ extern Adafruit_ILI9341 tft;
 extern Adafruit_FT6206  ts;
 
 // Functions
-void LCD_Print_Text_Var(const char *Text, uint16_t x, uint16_t y, const char *TextVar, uint16_t BackgroundColour, uint16_t TextColour, uint8_t TextSize);
-void LCD_Print_Float(const char *Text, uint16_t x, uint16_t y, float FloatVar, uint16_t BackgroundColour, uint16_t TextColour, uint8_t TextSize);
+void LCD_Print_Text_Var(const char *Text, uint16_t x, uint16_t y, const char *TextVar, const char *Units, uint16_t BackgroundColour, uint16_t TextColour, uint8_t TextSize);
+void LCD_Print_Float(const char *Text, uint16_t x, uint16_t y, float FloatVar, const char *Units, uint16_t BackgroundColour, uint16_t TextColour, uint8_t TextSize);
 void LCD_Print_Int(const char *Text, uint16_t x, uint16_t y, uint16_t IntVar, uint16_t BackgroundColour, uint16_t TextColour, uint8_t TextSize);
 void LCD_Print_Text(const char *Text, uint16_t x, uint16_t y, uint16_t BackgroundColour, uint16_t TextColour, uint8_t TextSize);
 float Check_Heater_Target_Temperature_Limits(float Temperature);

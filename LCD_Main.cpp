@@ -60,21 +60,27 @@ void LCD_Print_Text_Var(const char *Text, uint16_t x, uint16_t y, const char *Te
 }
 
 // Prints text to the LCD screen with the addition of an int variable
-void LCD_Print_Int_Var(const char *Text, uint16_t x, uint16_t y, uint16_t IntVar, uint16_t BackgroundColour, uint16_t TextColour, uint8_t TextSize) {
+void LCD_Print_Int_Var(const char *Text, uint16_t x, uint16_t y, uint16_t IntVar, const char *Units, uint16_t BackgroundColour, uint16_t TextColour, uint8_t TextSize) {
   tft.setTextColor(TextColour, BackgroundColour);
   tft.setTextSize(TextSize);
   tft.setCursor(x, y);
   tft.print(Text);
   tft.print(IntVar);
+  if (Units != nullptr) {
+    tft.print(Units);
+  }
 }
 
 // Prints text to the LCD screen with the addition of a float variable
-void LCD_Print_Float_Var(const char *Text, uint16_t x, uint16_t y, uint16_t FloatVar, uint16_t BackgroundColour, uint16_t TextColour, uint8_t TextSize) {
+void LCD_Print_Float_Var(const char *Text, uint16_t x, uint16_t y, uint16_t FloatVar, const char *Units, uint16_t BackgroundColour, uint16_t TextColour, uint8_t TextSize) {
   tft.setTextColor(TextColour, BackgroundColour);
   tft.setTextSize(TextSize);
   tft.setCursor(x, y);
   tft.print(Text);
   tft.print((float)FloatVar / FloatVarScaling, 1);
+  if (Units != nullptr) {
+    tft.print(Units);
+  }
 }
 
 // Gets the coordinates of where the user touched the screen(If screen was touched)
@@ -206,6 +212,7 @@ void Update_Screen_Graphics(void) {
           LCD_Print_Int_Var(LCDScreenData_Current->TextArr[i].Text,
                             LCDScreenData_Current->TextArr[i].Position.x, LCDScreenData_Current->TextArr[i].Position.y,
                             LCDScreenData_Current->TextArr[i].IntVar,
+                            LCDScreenData_Current->TextArr[i].TextVarUnits,
                             LCDScreenData_Current->TextArr[i].BackgroundColour,
                             LCDScreenData_Current->TextArr[i].TextColour,
                             LCDScreenData_Current->TextArr[i].FontSize);
@@ -215,6 +222,7 @@ void Update_Screen_Graphics(void) {
           LCD_Print_Float_Var(LCDScreenData_Current->TextArr[i].Text,
                               LCDScreenData_Current->TextArr[i].Position.x, LCDScreenData_Current->TextArr[i].Position.y,
                               (float)LCDScreenData_Current->TextArr[i].FloatVar,
+                              LCDScreenData_Current->TextArr[i].TextVarUnits,
                               LCDScreenData_Current->TextArr[i].BackgroundColour,
                               LCDScreenData_Current->TextArr[i].TextColour,
                               LCDScreenData_Current->TextArr[i].FontSize);
