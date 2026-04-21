@@ -209,6 +209,7 @@ void UpdateScreenLogic_MainMenuScreen(void) {
  */
 // Buttons
 Adafruit_GFX_Button GFX_Button_Data_Heater_On_Off;
+Adafruit_GFX_Button GFX_Button_Data_HeaterMode;
 LCD_Button ButtonsArr_DataScreen[BUTTON_DATA_ARRAY_NUM] = {
   { // Back Button
     Back_Button
@@ -225,6 +226,19 @@ LCD_Button ButtonsArr_DataScreen[BUTTON_DATA_ARRAY_NUM] = {
     BUTTON_DATA_HEATER_ON_OFF_WIDTH_SACLE,
     BUTTON_DATA_HEATER_ON_OFF_HEIGHT_SACLE,
     BUTTON_DATA_HEATER_ON_OFF_DEFAULT_AVAILABLE
+  },
+    { // Heater Mode, doesn't show value
+    "",
+    ButtonHandler_Data_HeaterMode,
+    GFX_Button_Data_HeaterMode,
+    {BUTTON_DATA_HEATER_MODE_X,BUTTON_DATA_HEATER_MODE_Y},
+    {BUTTON_DATA_HEATER_MODE_WIDTH, BUTTON_DATA_HEATER_MODE_HEIGHT},
+    BUTTON_DATA_HEATER_MODE_BACKGROUND_COLOUR,
+    BUTTON_DATA_HEATER_MODE_TEXT_COLOUR,
+    BUTTON_DATA_HEATER_MODE_BORDER_COLOUR,
+    BUTTON_DATA_HEATER_MODE_WIDTH_SACLE,
+    BUTTON_DATA_HEATER_MODE_HEIGHT_SACLE,
+    BUTTON_DATA_HEATER_MODE_DEFAULT_AVAILABLE
   }
 };
 
@@ -234,8 +248,9 @@ char HeaterOnOffTextArr[2][8] = {
   "Off", // Default text
   "On " // 
 };
-char HeaterModeTextArr[2][8] = {
-  "Auto  ", // Default text
+// Stores text of both states of Heater Mode
+char HeaterModeTextArr[2][7] = {
+  " Auto ",
   "Manual"
 };
 char TEXT_DATA_HEATER_ON_OFF_DEFAULT_TEXT_VAL[] = "Off";
@@ -286,7 +301,7 @@ LCD_Text TextArr_DataScreen[TEXT_DATA_ARRAY_NUM] = {
     TEXT_DATA_HEATER_ON_OFF_VAR_TYPE
   },
   { // Heater Mode
-    "Heater Mode: ",
+    "Heater Mode:",
     TEXT_DATA_HEATER_MODE_DEFAULT_TEXT_VAL,
     TEXT_DATA_HEATER_MODE_DEFAULT_FLOAT_VAL,
     {TEXT_DATA_HEATER_MODE_X, TEXT_DATA_HEATER_MODE_Y},
@@ -295,6 +310,17 @@ LCD_Text TextArr_DataScreen[TEXT_DATA_ARRAY_NUM] = {
     TEXT_DATA_HEATER_MODE_DEFAULT_INT_VAL,
     TEXT_DATA_HEATER_MODE_FONT_SIZE,
     TEXT_DATA_HEATER_MODE_VAR_TYPE
+  },
+  { // Heater Mode Value, only shows the value in seprate place so it can be placed ontop of the button
+    "",
+    HeaterModeTextArr[TEXT_DATA_HEATER_MODE_TEXT_AUTO_INDEX], // "Auto" as default value
+    TEXT_DATA_HEATER_MODE_VALUE_DEFAULT_FLOAT_VAL,
+    {TEXT_DATA_HEATER_MODE_VALUE_X, TEXT_DATA_HEATER_MODE_VALUE_Y},
+    TEXT_DATA_HEATER_MODE_VALUE_BACKGROUND_COLOUR,
+    TEXT_DATA_HEATER_MODE_VALUE_TEXT_COLOUR,
+    TEXT_DATA_HEATER_MODE_VALUE_DEFAULT_INT_VAL,
+    TEXT_DATA_HEATER_MODE_VALUE_FONT_SIZE,
+    TEXT_DATA_HEATER_MODE_VALUE_VAR_TYPE
   }
 };
 
@@ -364,6 +390,17 @@ void ButtonHandler_Data_HeaterOnOff(void) {
   //Serial.println(HeaterOnOffState);
   //Serial.print("HeaterOnOffState(LCD): ");
   //Serial.println(ScreenData_Data.TextArr[BUTTON_DATA_HEATER_ON_OFF_ARRAY_INDEX].TextVar);
+}
+void ButtonHandler_Data_HeaterMode(void) {
+  // TODO: When clicked, latch between "Auto" and "Manual"
+  
+  HeaterMode = !HeaterMode;  // Switch to other mode
+  
+  ScreenData_Data.TextArr[TEXT_DATA_HEATER_MODE_VALUE_INDEX].TextVar = HeaterModeTextArr[HeaterMode]; // Update LCD text
+  
+  ScreenData_Data.ButtonsArr[BUTTON_DATA_HEATER_ON_OFF_ARRAY_INDEX].Available = HeaterMode; // Update Data Screen Heater On Off button available
+
+  // TODO: Also need to allow user to turn heater on/off when in manual mode
 }
 // Updates the logic for the screen
 void UpdateScreenLogic_DataScreen(void) {
@@ -475,28 +512,10 @@ LCD_Button ButtonsArr_SettingsScreen[BUTTON_SETTINGS_ARRAY_NUM] = {
     BUTTON_SETTINGS_H_T_T_VALUE_DOWN_WIDTH_SACLE,
     BUTTON_SETTINGS_H_T_T_VALUE_DOWN_HEIGHT_SACLE,
     BUTTON_SETTINGS_H_T_T_VALUE_DOWN_DEFAULT_AVAILABLE
-  },
-  { // Heater Mode, doesn't show value
-    "",
-    ButtonHandler_Settings_HeaterMode,
-    GFX_Button_Settings_HeaterMode,
-    {BUTTON_SETTINGS_HEATER_MODE_X,BUTTON_SETTINGS_HEATER_MODE_Y},
-    {BUTTON_SETTINGS_HEATER_MODE_WIDTH, BUTTON_SETTINGS_HEATER_MODE_HEIGHT},
-    BUTTON_SETTINGS_HEATER_MODE_BACKGROUND_COLOUR,
-    BUTTON_SETTINGS_HEATER_MODE_TEXT_COLOUR,
-    BUTTON_SETTINGS_HEATER_MODE_BORDER_COLOUR,
-    BUTTON_SETTINGS_HEATER_MODE_WIDTH_SACLE,
-    BUTTON_SETTINGS_HEATER_MODE_HEIGHT_SACLE,
-    BUTTON_SETTINGS_HEATER_MODE_DEFAULT_AVAILABLE
   }
 };
 
 /* Texts */
-// Stores text of both states of Heater Mode
-char Text_Settings_Heater_Mode_Values_Arr[2][7] = {
-  " Auto ",
-  "Manual"
-};
 LCD_Text TextArr_SettingsScreen[TEXT_SETTINGS_ARRAY_NUM] = {
   { // Title
     "Settings",
@@ -552,28 +571,6 @@ LCD_Text TextArr_SettingsScreen[TEXT_SETTINGS_ARRAY_NUM] = {
     TEXT_SETTINGS_H_T_T_PT4_DEFAULT_INT_VAL,
     TEXT_SETTINGS_H_T_T_PT4_FONT_SIZE,
     TEXT_SETTINGS_H_T_T_PT4_VAR_TYPE
-  },
-  { // Heater Mode, Doesn't store a value, button in place to show user it can be clicked
-    "Heater Mode:",
-    nullptr, // No text value to use
-    TEXT_SETTINGS_HEATER_MODE_DEFAULT_FLOAT_VAL,
-    {TEXT_SETTINGS_HEATER_MODE_X, TEXT_SETTINGS_HEATER_MODE_Y},
-    TEXT_SETTINGS_HEATER_MODE_BACKGROUND_COLOUR,
-    TEXT_SETTINGS_HEATER_MODE_TEXT_COLOUR,
-    TEXT_SETTINGS_HEATER_MODE_DEFAULT_INT_VAL,
-    TEXT_SETTINGS_HEATER_MODE_FONT_SIZE,
-    TEXT_SETTINGS_HEATER_MODE_VAR_TYPE
-  },
-  { // Heater Mode Value, only shows the value in seprate place so it can be placed ontop of the button
-    "",
-    Text_Settings_Heater_Mode_Values_Arr[0], // "Auto" as default value
-    TEXT_SETTINGS_HEATER_MODE_VALUE_DEFAULT_FLOAT_VAL,
-    {TEXT_SETTINGS_HEATER_MODE_VALUE_X, TEXT_SETTINGS_HEATER_MODE_VALUE_Y},
-    TEXT_SETTINGS_HEATER_MODE_VALUE_BACKGROUND_COLOUR,
-    TEXT_SETTINGS_HEATER_MODE_VALUE_TEXT_COLOUR,
-    TEXT_SETTINGS_HEATER_MODE_VALUE_DEFAULT_INT_VAL,
-    TEXT_SETTINGS_HEATER_MODE_VALUE_FONT_SIZE,
-    TEXT_SETTINGS_HEATER_MODE_VALUE_VAR_TYPE
   }
 };
 
@@ -638,29 +635,16 @@ void ButtonHandler_Settings_H_T_T_Value (void) {
 }
 void ButtonHandler_Settings_H_T_T_Value_Up (void) {
   // TODO: Check new value against limits and set the value
+  //Serial.println("Heater Target Temperature Up button pressed");
   HeaterTargetTemperature = Check_Heater_Target_Temperature_Limits(HeaterTargetTemperature + 0.1);
   TextArr_SettingsScreen[TEXT_SETTINGS_H_T_T_PT4_INDEX].FloatVar = (uint16_t)(HeaterTargetTemperature * FloatVarScaling); // Update screen value and scale x10
   //Serial.println(TextArr_SettingsScreen[TEXT_SETTINGS_H_T_T_PT4_INDEX].FloatVar);
 }
 void ButtonHandler_Settings_H_T_T_Value_Down (void) {
   // TODO: Check new value against limits and set the value
+  //Serial.println("Heater Target Temperature Down button pressed");
   HeaterTargetTemperature = Check_Heater_Target_Temperature_Limits(HeaterTargetTemperature - 0.1);
   TextArr_SettingsScreen[TEXT_SETTINGS_H_T_T_PT4_INDEX].FloatVar = (uint16_t)(HeaterTargetTemperature * FloatVarScaling);
-}
-void ButtonHandler_Settings_HeaterMode (void) {
-  // TODO: When clicked, latch between "Auto" and "Manual"
-  
-  // Switch to other mode
-  HeaterMode = !HeaterMode;
-
-  // Update LCD text
-  ScreenData_Settings.TextArr[TEXT_SETTINGS_HEATER_MODE_VALUE_INDEX].TextVar = Text_Settings_Heater_Mode_Values_Arr[HeaterMode]; // Settings screen
-  ScreenData_Data.TextArr[TEXT_DATA_HEATER_MODE_INDEX].TextVar = HeaterModeTextArr[HeaterMode]; // Data screen
-  
-  // Update Data Screen Heater On Off button available
-  ScreenData_Data.ButtonsArr[BUTTON_DATA_HEATER_ON_OFF_ARRAY_INDEX].Available = HeaterMode;
-
-  // TODO: Also need to allow user to turn heater when in manual mode
 }
 // Updates the logic for the screen
 void UpdateScreenLogic_SettingsScreen(void) {
