@@ -7,7 +7,7 @@ void Buttons_Init(void) {
   Screen_Buttons_Init(&ScreenData_MainMenu);
   Screen_Buttons_Init(&ScreenData_Data);
   Screen_Buttons_Init(&ScreenData_Settings);
-  //Screen_Buttons_Init(&ScreenData_Keypad);
+  Screen_Buttons_Init(&ScreenData_Keypad);
 }
 
 // Initialises all the buttons for a given screen
@@ -164,6 +164,7 @@ void Update_Menu_Change_Config(void) {
       Previous_Menu_Screen = ENUM_MENU_MAIN_MENU_SCREEN;
       break;
   }
+  Update_Screen_Graphics();
 }
 
 // Contains all the logic for the screens
@@ -254,7 +255,7 @@ void Update_Screen_Graphics(void) {
 }
 
 float Check_Heater_Target_Temperature_Limits(float Temperature) {
-  Serial.println(Temperature);
+  //Serial.println(Temperature);
   if (Temperature < HeaterLimits.Low) {
     return HeaterLimits.Low;
   }

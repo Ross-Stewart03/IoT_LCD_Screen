@@ -183,7 +183,7 @@ void ButtonHandler_MainMenu_DataScreenSelect (void) {
 void ButtonHandler_MainMenu_SettingsScreenSelect (void) {
   ChangeMenuFlag = 1; // Set flag to change menus
 
-  Serial.println("Settings Button pressed");
+  //Serial.println("Settings Button pressed");
   Previous_Menu_Screen = Current_Menu_Screen;
 
   // Change this back to KEYPAD, temporally  using settings to get screen working first 
@@ -228,7 +228,7 @@ LCD_Button ButtonsArr_DataScreen[BUTTON_DATA_ARRAY_NUM] = {
   }
 };
 
-/* Texts*/
+/* Texts */
 // Stores text of both states of the heater
 char HeaterOnOffTextArr[2][8] = {
   "Off", // Default text
@@ -357,13 +357,13 @@ LCD_Screen_Data ScreenData_Data = {
 // Button Hanlders
 void ButtonHandler_Data_HeaterOnOff(void) {
   // Allows user to turn the heater on/off (Only in manual mode)
-  Serial.println("Heater On Off button pressed");
+  //Serial.println("Heater On Off button pressed");
   HeaterOnOffState = !HeaterOnOffState;
   ScreenData_Data.TextArr[BUTTON_DATA_HEATER_ON_OFF_ARRAY_INDEX].TextVar = HeaterOnOffTextArr[HeaterOnOffState];
-  Serial.print("HeaterOnOffState: ");
-  Serial.println(HeaterOnOffState);
-  Serial.print("HeaterOnOffState(LCD): ");
-  Serial.println(ScreenData_Data.TextArr[BUTTON_DATA_HEATER_ON_OFF_ARRAY_INDEX].TextVar);
+  //Serial.print("HeaterOnOffState: ");
+  //Serial.println(HeaterOnOffState);
+  //Serial.print("HeaterOnOffState(LCD): ");
+  //Serial.println(ScreenData_Data.TextArr[BUTTON_DATA_HEATER_ON_OFF_ARRAY_INDEX].TextVar);
 }
 // Updates the logic for the screen
 void UpdateScreenLogic_DataScreen(void) {
@@ -491,7 +491,7 @@ LCD_Button ButtonsArr_SettingsScreen[BUTTON_SETTINGS_ARRAY_NUM] = {
   }
 };
 
-/* Texts*/
+/* Texts */
 // Stores text of both states of Heater Mode
 char Text_Settings_Heater_Mode_Values_Arr[2][7] = {
   " Auto ",
@@ -608,12 +608,6 @@ LCD_Circle CirclesArr_DataScreen[CIRCLE_DATA_ARRAY_NUM] = {
   }
 };*/
 
-// Heater Target Temperature
-Limits_Float HeaterLimits = {
-  LIMITS_HIGH_H_T_T,
-  LIMITS_LOW_H_T_T
-};
-
 // Screen Data
 LCD_Screen_Data ScreenData_Settings = {
   ButtonsArr_SettingsScreen,
@@ -629,23 +623,27 @@ LCD_Screen_Data ScreenData_Settings = {
   ENUM_MENU_SETTINGS_SCREEN
 };
 
+// Limits for Heater
+Limits_Float  HeaterLimits = {
+  LIMITS_HIGH_H_T_T,
+  LIMITS_LOW_H_T_T
+};
+
 // Button Hanlders
 void ButtonHandler_Settings_H_T_T_Value (void) {
   // TODO: Needs to call call keybaord to get a value
   // Check user entered value against limits and set the value
   // Use HeaterTargetTemperature = Check_Heater_Target_Temperature_Limits([keypad function here]);
-  Serial.println("Heater Target Temperature Value button pressed");
+  //Serial.println("Heater Target Temperature Value button pressed");
 }
 void ButtonHandler_Settings_H_T_T_Value_Up (void) {
   // TODO: Check new value against limits and set the value
-  Serial.println("Heater Target Temperature Up button pressed");
   HeaterTargetTemperature = Check_Heater_Target_Temperature_Limits(HeaterTargetTemperature + 0.1);
   TextArr_SettingsScreen[TEXT_SETTINGS_H_T_T_PT4_INDEX].FloatVar = (uint16_t)(HeaterTargetTemperature * FloatVarScaling); // Update screen value and scale x10
-  Serial.println(TextArr_SettingsScreen[TEXT_SETTINGS_H_T_T_PT4_INDEX].FloatVar);
+  //Serial.println(TextArr_SettingsScreen[TEXT_SETTINGS_H_T_T_PT4_INDEX].FloatVar);
 }
 void ButtonHandler_Settings_H_T_T_Value_Down (void) {
   // TODO: Check new value against limits and set the value
-  Serial.println("Heater Target Temperature Down button pressed");
   HeaterTargetTemperature = Check_Heater_Target_Temperature_Limits(HeaterTargetTemperature - 0.1);
   TextArr_SettingsScreen[TEXT_SETTINGS_H_T_T_PT4_INDEX].FloatVar = (uint16_t)(HeaterTargetTemperature * FloatVarScaling);
 }
@@ -666,21 +664,308 @@ void ButtonHandler_Settings_HeaterMode (void) {
 }
 // Updates the logic for the screen
 void UpdateScreenLogic_SettingsScreen(void) {
-
 }
 /*
  *
-  Screen Settings
+  Settings Screen
  *
  */
+
 
 /*
  *
   Keypad Screen
  *
  */
- // TODO: Populate with what Keypad actually needs, just name swapped definitions
- // The "Back" button here needs to be "Cancel". Don't include Back button
+// Buttons
+Adafruit_GFX_Button GFX_Button_Keypad_Cancel;
+Adafruit_GFX_Button GFX_Button_Keypad_Num_0;
+Adafruit_GFX_Button GFX_Button_Keypad_Num_1;
+Adafruit_GFX_Button GFX_Button_Keypad_Num_2;
+Adafruit_GFX_Button GFX_Button_Keypad_Num_3;
+Adafruit_GFX_Button GFX_Button_Keypad_Num_4;
+Adafruit_GFX_Button GFX_Button_Keypad_Num_5;
+Adafruit_GFX_Button GFX_Button_Keypad_Num_6;
+Adafruit_GFX_Button GFX_Button_Keypad_Num_7;
+Adafruit_GFX_Button GFX_Button_Keypad_Num_8;
+Adafruit_GFX_Button GFX_Button_Keypad_Num_9;
+Adafruit_GFX_Button GFX_Button_Keypad_Delete;
+Adafruit_GFX_Button GFX_Button_Keypad_Enter;
+LCD_Button ButtonsArr_KeypadScreen[BUTTON_KEYPAD_ARRAY_NUM] = {
+  { // Cancel Button
+    "Cancel",
+    ButtonHandler_Keypad_Cancel,
+    GFX_Button_Keypad_Cancel,
+    {BUTTON_KEYPAD_CANCEL_X,BUTTON_KEYPAD_CANCEL_Y},
+    {BUTTON_KEYPAD_CANCEL_WIDTH, BUTTON_KEYPAD_CANCEL_HEIGHT},
+    BUTTON_KEYPAD_CANCEL_BACKGROUND_COLOUR,
+    BUTTON_KEYPAD_CANCEL_TEXT_COLOUR,
+    BUTTON_KEYPAD_CANCEL_BORDER_COLOUR,
+    BUTTON_KEYPAD_CANCEL_WIDTH_SACLE,
+    BUTTON_KEYPAD_CANCEL_HEIGHT_SACLE,
+    BUTTON_KEYPAD_CANCEL_DEFAULT_AVAILABLE
+  },
+  { // Num 0 Button
+    "0",
+    ButtonHandler_Keypad_Num_0,
+    GFX_Button_Keypad_Num_0,
+    {BUTTON_KEYPAD_NUM_0_X,BUTTON_KEYPAD_NUM_0_Y},
+    {BUTTON_KEYPAD_NUM_0_WIDTH, BUTTON_KEYPAD_NUM_0_HEIGHT},
+    BUTTON_KEYPAD_NUM_0_BACKGROUND_COLOUR,
+    BUTTON_KEYPAD_NUM_0_TEXT_COLOUR,
+    BUTTON_KEYPAD_NUM_0_BORDER_COLOUR,
+    BUTTON_KEYPAD_NUM_0_WIDTH_SACLE,
+    BUTTON_KEYPAD_NUM_0_HEIGHT_SACLE,
+    BUTTON_KEYPAD_NUM_0_DEFAULT_AVAILABLE
+  },
+  { // Num 1 Button
+    "1",
+    ButtonHandler_Keypad_Num_1,
+    GFX_Button_Keypad_Num_1,
+    {BUTTON_KEYPAD_NUM_1_X,BUTTON_KEYPAD_NUM_1_Y},
+    {BUTTON_KEYPAD_NUM_1_WIDTH, BUTTON_KEYPAD_NUM_1_HEIGHT},
+    BUTTON_KEYPAD_NUM_1_BACKGROUND_COLOUR,
+    BUTTON_KEYPAD_NUM_1_TEXT_COLOUR,
+    BUTTON_KEYPAD_NUM_1_BORDER_COLOUR,
+    BUTTON_KEYPAD_NUM_1_WIDTH_SACLE,
+    BUTTON_KEYPAD_NUM_1_HEIGHT_SACLE,
+    BUTTON_KEYPAD_NUM_1_DEFAULT_AVAILABLE
+  },
+  { // Num 2 Button
+    "2",
+    ButtonHandler_Keypad_Num_2,
+    GFX_Button_Keypad_Num_2,
+    {BUTTON_KEYPAD_NUM_2_X,BUTTON_KEYPAD_NUM_2_Y},
+    {BUTTON_KEYPAD_NUM_2_WIDTH, BUTTON_KEYPAD_NUM_2_HEIGHT},
+    BUTTON_KEYPAD_NUM_2_BACKGROUND_COLOUR,
+    BUTTON_KEYPAD_NUM_2_TEXT_COLOUR,
+    BUTTON_KEYPAD_NUM_2_BORDER_COLOUR,
+    BUTTON_KEYPAD_NUM_2_WIDTH_SACLE,
+    BUTTON_KEYPAD_NUM_2_HEIGHT_SACLE,
+    BUTTON_KEYPAD_NUM_2_DEFAULT_AVAILABLE
+  },
+  { // Num 3 Button
+    "3",
+    ButtonHandler_Keypad_Num_3,
+    GFX_Button_Keypad_Num_3,
+    {BUTTON_KEYPAD_NUM_3_X,BUTTON_KEYPAD_NUM_3_Y},
+    {BUTTON_KEYPAD_NUM_3_WIDTH, BUTTON_KEYPAD_NUM_3_HEIGHT},
+    BUTTON_KEYPAD_NUM_3_BACKGROUND_COLOUR,
+    BUTTON_KEYPAD_NUM_3_TEXT_COLOUR,
+    BUTTON_KEYPAD_NUM_3_BORDER_COLOUR,
+    BUTTON_KEYPAD_NUM_3_WIDTH_SACLE,
+    BUTTON_KEYPAD_NUM_3_HEIGHT_SACLE,
+    BUTTON_KEYPAD_NUM_3_DEFAULT_AVAILABLE
+  },
+  { // Num 4 Button
+    "4",
+    ButtonHandler_Keypad_Num_4,
+    GFX_Button_Keypad_Num_4,
+    {BUTTON_KEYPAD_NUM_4_X,BUTTON_KEYPAD_NUM_4_Y},
+    {BUTTON_KEYPAD_NUM_4_WIDTH, BUTTON_KEYPAD_NUM_4_HEIGHT},
+    BUTTON_KEYPAD_NUM_4_BACKGROUND_COLOUR,
+    BUTTON_KEYPAD_NUM_4_TEXT_COLOUR,
+    BUTTON_KEYPAD_NUM_4_BORDER_COLOUR,
+    BUTTON_KEYPAD_NUM_4_WIDTH_SACLE,
+    BUTTON_KEYPAD_NUM_4_HEIGHT_SACLE,
+    BUTTON_KEYPAD_NUM_4_DEFAULT_AVAILABLE
+  },
+  { // Num 5 Button
+    "5",
+    ButtonHandler_Keypad_Num_5,
+    GFX_Button_Keypad_Num_5,
+    {BUTTON_KEYPAD_NUM_5_X,BUTTON_KEYPAD_NUM_5_Y},
+    {BUTTON_KEYPAD_NUM_5_WIDTH, BUTTON_KEYPAD_NUM_5_HEIGHT},
+    BUTTON_KEYPAD_NUM_5_BACKGROUND_COLOUR,
+    BUTTON_KEYPAD_NUM_5_TEXT_COLOUR,
+    BUTTON_KEYPAD_NUM_5_BORDER_COLOUR,
+    BUTTON_KEYPAD_NUM_5_WIDTH_SACLE,
+    BUTTON_KEYPAD_NUM_5_HEIGHT_SACLE,
+    BUTTON_KEYPAD_NUM_5_DEFAULT_AVAILABLE
+  },
+  { // Num 6 Button
+    "6",
+    ButtonHandler_Keypad_Num_6,
+    GFX_Button_Keypad_Num_6,
+    {BUTTON_KEYPAD_NUM_6_X,BUTTON_KEYPAD_NUM_6_Y},
+    {BUTTON_KEYPAD_NUM_6_WIDTH, BUTTON_KEYPAD_NUM_6_HEIGHT},
+    BUTTON_KEYPAD_NUM_6_BACKGROUND_COLOUR,
+    BUTTON_KEYPAD_NUM_6_TEXT_COLOUR,
+    BUTTON_KEYPAD_NUM_6_BORDER_COLOUR,
+    BUTTON_KEYPAD_NUM_6_WIDTH_SACLE,
+    BUTTON_KEYPAD_NUM_6_HEIGHT_SACLE,
+    BUTTON_KEYPAD_NUM_6_DEFAULT_AVAILABLE
+  },
+  { // Num 7 Button
+    "7",
+    ButtonHandler_Keypad_Num_7,
+    GFX_Button_Keypad_Num_7,
+    {BUTTON_KEYPAD_NUM_7_X,BUTTON_KEYPAD_NUM_7_Y},
+    {BUTTON_KEYPAD_NUM_7_WIDTH, BUTTON_KEYPAD_NUM_7_HEIGHT},
+    BUTTON_KEYPAD_NUM_7_BACKGROUND_COLOUR,
+    BUTTON_KEYPAD_NUM_7_TEXT_COLOUR,
+    BUTTON_KEYPAD_NUM_7_BORDER_COLOUR,
+    BUTTON_KEYPAD_NUM_7_WIDTH_SACLE,
+    BUTTON_KEYPAD_NUM_7_HEIGHT_SACLE,
+    BUTTON_KEYPAD_NUM_7_DEFAULT_AVAILABLE
+  },
+  { // Num 8 Button
+    "8",
+    ButtonHandler_Keypad_Num_8,
+    GFX_Button_Keypad_Num_8,
+    {BUTTON_KEYPAD_NUM_8_X,BUTTON_KEYPAD_NUM_8_Y},
+    {BUTTON_KEYPAD_NUM_8_WIDTH, BUTTON_KEYPAD_NUM_8_HEIGHT},
+    BUTTON_KEYPAD_NUM_8_BACKGROUND_COLOUR,
+    BUTTON_KEYPAD_NUM_8_TEXT_COLOUR,
+    BUTTON_KEYPAD_NUM_8_BORDER_COLOUR,
+    BUTTON_KEYPAD_NUM_8_WIDTH_SACLE,
+    BUTTON_KEYPAD_NUM_8_HEIGHT_SACLE,
+    BUTTON_KEYPAD_NUM_8_DEFAULT_AVAILABLE
+  },
+  { // Num 9 Button
+    "9",
+    ButtonHandler_Keypad_Num_9,
+    GFX_Button_Keypad_Num_9,
+    {BUTTON_KEYPAD_NUM_9_X,BUTTON_KEYPAD_NUM_9_Y},
+    {BUTTON_KEYPAD_NUM_9_WIDTH, BUTTON_KEYPAD_NUM_9_HEIGHT},
+    BUTTON_KEYPAD_NUM_9_BACKGROUND_COLOUR,
+    BUTTON_KEYPAD_NUM_9_TEXT_COLOUR,
+    BUTTON_KEYPAD_NUM_9_BORDER_COLOUR,
+    BUTTON_KEYPAD_NUM_9_WIDTH_SACLE,
+    BUTTON_KEYPAD_NUM_9_HEIGHT_SACLE,
+    BUTTON_KEYPAD_NUM_9_DEFAULT_AVAILABLE
+  },
+  { // Delete Button
+    "DEL",
+    ButtonHandler_Keypad_Delete,
+    GFX_Button_Keypad_Delete,
+    {BUTTON_KEYPAD_DELETE_X,BUTTON_KEYPAD_DELETE_Y},
+    {BUTTON_KEYPAD_DELETE_WIDTH, BUTTON_KEYPAD_DELETE_HEIGHT},
+    BUTTON_KEYPAD_DELETE_BACKGROUND_COLOUR,
+    BUTTON_KEYPAD_DELETE_TEXT_COLOUR,
+    BUTTON_KEYPAD_DELETE_BORDER_COLOUR,
+    BUTTON_KEYPAD_DELETE_WIDTH_SACLE,
+    BUTTON_KEYPAD_DELETE_HEIGHT_SACLE,
+    BUTTON_KEYPAD_DELETE_DEFAULT_AVAILABLE
+  },
+  { // Enter Button
+    "Enter",
+    ButtonHandler_Keypad_Enter,
+    GFX_Button_Keypad_Enter,
+    {BUTTON_KEYPAD_ENTER_X,BUTTON_KEYPAD_ENTER_Y},
+    {BUTTON_KEYPAD_ENTER_WIDTH, BUTTON_KEYPAD_ENTER_HEIGHT},
+    BUTTON_KEYPAD_ENTER_BACKGROUND_COLOUR,
+    BUTTON_KEYPAD_ENTER_TEXT_COLOUR,
+    BUTTON_KEYPAD_ENTER_BORDER_COLOUR,
+    BUTTON_KEYPAD_ENTER_WIDTH_SACLE,
+    BUTTON_KEYPAD_ENTER_HEIGHT_SACLE,
+    BUTTON_KEYPAD_ENTER_DEFAULT_AVAILABLE
+  }
+};
+
+/* Texts */
+LCD_Text TextArr_KeypadScreen[TEXT_KEYPAD_ARRAY_NUM] = {
+  { // Title
+    "", // No default text as it depends on what calls it
+    nullptr, // No text variable being used
+    TEXT_KEYPAD_TITLE_DEFAULT_FLOAT_VAL,
+    {TEXT_KEYPAD_TITLE_X, TEXT_DATA_TITLE_Y},
+    TEXT_KEYPAD_TITLE_BACKGROUND_COLOUR,
+    TEXT_KEYPAD_TITLE_TEXT_COLOUR,
+    TEXT_KEYPAD_TITLE_DEFAULT_INT_VAL,
+    TEXT_KEYPAD_TITLE_FONT_SIZE,
+    TEXT_KEYPAD_TITLE_VAR_TYPE
+  },
+  { // User's value
+    "", 
+    nullptr, // No text variable being used
+    TEXT_KEYPAD_USER_VALUE_DEFAULT_FLOAT_VAL,
+    {_X, TEXT_KEYPAD_USER_VALUE_Y},
+    TEXT_KEYPAD_USER_VALUE_BACKGROUND_COLOUR,
+    TEXT_KEYPAD_USER_VALUE_TEXT_COLOUR,
+    TEXT_KEYPAD_USER_VALUE_DEFAULT_INT_VAL,
+    TEXT_KEYPAD_USER_VALUE_FONT_SIZE,
+    TEXT_KEYPAD_USER_VALUE_VAR_TYPE
+  }
+};
+
+// Rectangle colours
+/* No rectangles are drawn therefore no colours needed
+uint16_t RectangleColours_SettingsScreen[] = { 
+  // Heater target temperature value highlight (H_T_T_VAL)
+  ILI9341_DARKGREY // Index 0 is default colour
+};
+
+// Rectangle shapes
+LCD_Rectangle RectanglesArr_SettingsScreen[RECTANGLE_SETTINGS_ARRAY_NUM] = {
+  RectangleColours_SettingsScreen,
+  {RECTANGLE_SETTINGS_H_T_T_VALUE_X, RECTANGLE_SETTINGS_H_T_T_VALUE_Y},
+  {RECTANGLE_SETTINGS_H_T_T_VALUE_WIDTH, RECTANGLE_SETTINGS_H_T_T_VALUE_HEIGHT},
+  RECTANGLE_SETTINGS_H_T_T_VALUE_ARRAY_GREY_INDEX // Default colour
+};*/
+
+// Circle colours
+/* No circles are drawn therefore no colours needed
+uint16_t CircleColours_SettingsScreen[2] = { 
+};
+
+// Circle shapes
+/* No circles are drawn
+LCD_Circle CirclesArr_DataScreen[CIRCLE_DATA_ARRAY_NUM] = {
+  { // Heater on/off LED
+    CircleColours_DataScreen,
+    {CIRCLE_SETTINGS_[Circle name here]_X, CIRCLE_SETTINGS_[Circle name here]_Y},
+    CIRCLE_SETTINGS_[Circle name here]_RADIUS,
+    CIRCLE_SETTINGS_[Circle name here]_ARRAY_INDEX // Default colour
+  }
+};*/
+
+// Screen Data
+LCD_Screen_Data ScreenData_Keypad = {
+  ButtonsArr_KeypadScreen,
+  TextArr_KeypadScreen,
+  nullptr, // No rectangles to be drawn
+  nullptr, // No circles to be drawn
+  UpdateScreenLogic_KeypadScreen,
+  SCREEN_KEYPAD_BACKGROUND_COLOUR,
+  BUTTON_KEYPAD_ARRAY_NUM,
+  TEXT_KEYPAD_ARRAY_NUM,
+  RECTANGLE_KEYPAD_ARRAY_NUM,
+  CIRCLE_KEYPAD_ARRAY_NUM,
+  ENUM_MENU_KEYPAD_SCREEN
+};
+
+// Button Hanlders
+void ButtonHandler_Keypad_Cancel(void) {
+}
+void ButtonHandler_Keypad_Num_0(void) {
+}
+void ButtonHandler_Keypad_Num_1(void) {
+}
+void ButtonHandler_Keypad_Num_2(void) {
+}
+void ButtonHandler_Keypad_Num_3(void) {
+}
+void ButtonHandler_Keypad_Num_4(void) {
+}
+void ButtonHandler_Keypad_Num_5(void) {
+}
+void ButtonHandler_Keypad_Num_6(void) {
+}
+void ButtonHandler_Keypad_Num_7(void) {
+}
+void ButtonHandler_Keypad_Num_8(void) {
+}
+void ButtonHandler_Keypad_Num_9(void) {
+}
+void ButtonHandler_Keypad_Delete(void) {
+}
+void ButtonHandler_Keypad_Enter(void) {
+}
+
+// Updates the logic for the screen
+void UpdateScreenLogic_KeypadScreen(void) {
+}
 /*
  *
   Keypad Screen

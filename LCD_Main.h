@@ -100,7 +100,7 @@ typedef struct LCD_Button {
 
 // Data about the text
 typedef struct LCD_Text {
-  const char        *Text; // Adafuit limits this based on text width visually in pixels
+  char        *Text; // Adafuit limits this based on text width visually in pixels
   char              *TextVar;
   uint16_t          FloatVar; // x10 so it can be stored as int, connection issue when data type is float
   X_Y_Position      Position;
